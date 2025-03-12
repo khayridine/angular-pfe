@@ -1,0 +1,22 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>SignIn</h2>
+    <form>
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="email" name="email" required />
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" [(ngModel)]="password" name="password" required />
+      </div>
+
+      <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+
+      <button (click)="login()" type="submit">Login</button>
+      <p>Pas encore de compte ? <a routerLink="/signup" routerLinkActive="active">S'inscrire</a></p>
+
+    </form>
+  </div>
+</div>
