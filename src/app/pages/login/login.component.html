@@ -1,22 +1,33 @@
 <div class="login-container">
   <div class="login-card">
-    <h2>SignIn</h2>
-    <form>
+    <h2>Connexion</h2>
+
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+      <!-- Champ Email -->
       <div class="input-group">
         <label>Email</label>
-        <input type="email" [(ngModel)]="email" name="email" required />
+        <input type="email" formControlName="email" required />
+        <p *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
+          Adresse email invalide.
+        </p>
       </div>
 
+      <!-- Champ Mot de passe -->
       <div class="input-group">
-        <label>Password</label>
-        <input type="password" [(ngModel)]="password" name="password" required />
+        <label>Mot de passe</label>
+        <input type="password" formControlName="password" required />
+        <p *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-message">
+          Le mot de passe doit comporter au moins 6 caractères.
+        </p>
       </div>
 
+      <!-- Message d'erreur -->
       <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
 
-      <button (click)="login()" type="submit">Login</button>
-      <p>Pas encore de compte ? <a routerLink="/signup" routerLinkActive="active">S'inscrire</a></p>
+      <!-- Bouton de soumission -->
+      <button type="submit" [disabled]="loginForm.invalid">Connexion</button>
 
+      <p>Pas encore de compte ? <a routerLink="/signup">S'inscrire</a></p>
     </form>
   </div>
 </div>
