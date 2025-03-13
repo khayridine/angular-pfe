@@ -1,59 +1,33 @@
-<div class="container d-flex justify-content-center align-items-center min-vh-100">
-  <div class="card shadow-lg p-4 rounded" style="width: 100%; max-width: 400px;">
-    <h2 class="text-center mb-4">Connexion</h2>
+<div class="login-container">
+  <div class="login-card">
+    <h2>Connexion</h2>
 
     <form [formGroup]="loginForm" (ngSubmit)="login()">
       <!-- Champ Email -->
-      <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input 
-          type="email" 
-          id="email" 
-          class="form-control" 
-          formControlName="email" 
-          [ngClass]="{'is-invalid': loginForm.get('email')?.invalid && loginForm.get('email')?.touched}"
-          placeholder="Entrez votre email"
-        />
-        <div class="invalid-feedback">
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" formControlName="email">
+        <p *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
           Adresse email invalide.
-        </div>
+        </p>
       </div>
 
       <!-- Champ Mot de passe -->
-      <div class="mb-3">
-        <label for="password" class="form-label">Mot de passe</label>
-        <input 
-          type="password" 
-          id="password" 
-          class="form-control" 
-          formControlName="password" 
-          [ngClass]="{'is-invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
-          placeholder="Entrez votre mot de passe"
-        />
-        <div class="invalid-feedback">
+      <div class="input-group">
+        <label>Mot de passe</label>
+        <input type="password" formControlName="mot_de_passe">
+        <p *ngIf="loginForm.get('mot_de_passe')?.invalid && loginForm.get('mot_de_passe')?.touched" class="error-message">
           Le mot de passe doit comporter au moins 6 caractères.
-        </div>
+        </p>
       </div>
 
-      <!-- Message d'erreur global -->
-      <div *ngIf="errorMessage" class="alert alert-danger mt-3">
-        {{ errorMessage }}
-      </div>
-
+       
       <!-- Bouton de soumission -->
-      <div class="d-grid">
-        <button 
-          type="submit" 
-          class="btn btn-primary"
-          [disabled]="loginForm.invalid">
-          Connexion
-        </button>
-      </div>
-      
-      <!-- Lien d'inscription -->
-      <p class="text-center mt-3">
-        Pas encore de compte ? <a routerLink="/signup" class="text-decoration-none">S'inscrire</a>
-      </p>
+      <button type="submit"  >Connexion</button>
+
+      <p>Pas encore de compte ? <a routerLink="/signup">S'inscrire</a></p>
     </form>
   </div>
 </div>
+
+ 
