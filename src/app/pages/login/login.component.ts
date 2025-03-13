@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'app-login',
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
@@ -12,47 +11,46 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class LoginComponent implements OnInit {
 
-  public errorMessage: string = ''
   loginForm!: FormGroup;
-
+  errorMessage: string = '';
   constructor(
     private auth: AuthService,
     private fb: FormBuilder,
     private router: Router
   ) { }
 
-
-
-
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required]],
-      password: ['', [Validators.required]]
-    });
+      email: ['', Validators.required, Validators.email],// Ensures valid email format    
+      password: ['', Validators.required, Validators.minLength(6)]// Minimum 6 characters for password  
+    })    
+  };
+ 
+
+
+
+login() {
+  console.log("this.form ", this.loginForm.value);
+
+  if (this.loginForm.invalid) {
+    console.log("this.form ", this.loginForm.value);
+
+    return;
   }
 
+  const { email, password } = this.loginForm.value;
+  this.auth.login(email, password).subscribe((result: any) => {
+    if (result) {
+      this.router.navigate(['/home'])
 
-
-  login() {
-    this.errorMessage = '';
-    if (this.loginForm.invalid) {
-      this.errorMessage = 'Veuillez remplir tous les champs requis correctement.';
-      return;
+    } else {
+      this.errorMessage = 'Email ou mot de passe incorrect.';
     }
-
-    const { email, password } = this.loginForm.value;
-    this.auth.login(email, password).subscribe((result: any) => {
-      if (result) {
-        this.router.navigate(['/home'])
-
-      } else {
-        this.errorMessage = 'Email ou mot de passe incorrect.';
-      }
-    })
-  }
-  signup() {
-    this.router.navigate(['/signup']);
-  }
+  })
+}
+signup() {
+  this.router.navigate(['/signup']);
+}
 
 
 
