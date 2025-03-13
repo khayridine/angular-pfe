@@ -20,9 +20,9 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.loginForm = this.fb.group({
-      email: ['', Validators.required, Validators.email],// Ensures valid email format    
-      password: ['', Validators.required, Validators.minLength(6)]// Minimum 6 characters for password  
+    this.loginForm = this.fb.group({ 
+      email: ['', [Validators.required, Validators.email]],  // Ensures valid email format  
+      password: ['', [Validators.required, Validators.minLength(6)]]  // Minimum 6 characters for password  
     })    
   };
  
@@ -30,7 +30,6 @@ export class LoginComponent implements OnInit {
 
 
 login() {
-  console.log("this.form ", this.loginForm.value);
 
   if (this.loginForm.invalid) {
     console.log("this.form ", this.loginForm.value);

@@ -15,19 +15,33 @@
       <!-- Champ Mot de passe -->
       <div class="input-group">
         <label>Mot de passe</label>
-        <input type="password" formControlName="password">
+      <input type="password" formControlName="password">
         <p *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-message">
           Le mot de passe doit comporter au moins 6 caractères.
         </p>
       </div>
 
-       
+      <!-- Message d'erreur -->
+      <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+
       <!-- Bouton de soumission -->
-      <button type="submit"  >Connexion</button>
+      <button type="submit" [disabled]="loginForm.invalid">Connexion</button>
 
       <p>Pas encore de compte ? <a routerLink="/signup">S'inscrire</a></p>
     </form>
   </div>
 </div>
 
- 
+<form [formGroup]="loginForm" (ngSubmit)="login()">
+  <label>
+    Email:
+    <input type="email" formControlName="email">
+  </label>
+  <br>
+  <label>
+    Mot de passe:
+    <input type="password" formControlName="password">
+  </label>
+  <br>
+  <button type="submit">Se connecter</button>
+</form>
