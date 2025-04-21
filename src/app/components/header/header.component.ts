@@ -28,6 +28,7 @@ export class HeaderComponent {
   logout() {
     console.log('Déconnexion...');
     // Ajoute ici la logique pour la déconnexion
+    localStorage.clear(); // Supprime le token du localStorage
     this.router.navigate(['/login']);
   }
   goToHome() {
