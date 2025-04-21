@@ -1,0 +1,50 @@
+<mat-toolbar color="primary" class="header">
+    
+  
+    <!-- Barre de recherche -->
+    <mat-form-field appearance="outline" class="search-bar">
+      <mat-label>Rechercher...</mat-label>
+      <input matInput type="text">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+    <!-- Menu d'action avec Profil et Déconnexion -->
+    <button mat-icon-button [matMenuTriggerFor]="profileMenu">
+        <mat-icon>account_circle</mat-icon> <!-- Icône du profil -->
+      </button>
+    
+      <mat-menu #profileMenu="matMenu">
+        <button mat-menu-item (click)="goToProfile()">
+          <mat-icon>person</mat-icon>
+          <span>Profil</span>
+        </button>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Déconnexion</span>
+        </button>
+      </mat-menu>
+  
+    <span class="flex-spacer"></span>
+  
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>menu</mat-icon>
+      </button>
+    
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="goToHome()">
+          <mat-icon>home</mat-icon>
+          <span>Menu</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>account_balance_wallet</mat-icon>
+          <span>Portefeuille</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>settings</mat-icon>
+          <span>Action</span>
+        </button>
+      </mat-menu>
+  
+    
+  </mat-toolbar>
+
+ 

@@ -30,7 +30,7 @@
       "@environments/*": ["src/environments/*"]
     }
   },
-  "files": ["src/main.ts", "src/polyfills.ts"],
+  "files": ["src/main.ts"],
   "angularCompilerOptions": {
     "strictTemplates": true,
     "enableIvy": true,
@@ -39,3 +39,4 @@
     "strictInjectionParameters": true
   }
 }
+

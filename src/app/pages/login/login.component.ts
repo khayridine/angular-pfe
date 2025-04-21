@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 @Component({
   selector: 'app-login',
   imports: [CommonModule, FormsModule, ReactiveFormsModule,RouterModule],
@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.loginForm = this.fb.group({ 
       email: ['', [Validators.required, Validators.email]],  // Ensures valid email format  
-      password: ['', [Validators.required, Validators.minLength(6)]]  // Minimum 6 characters for password  
+      mot_de_passe: ['', [Validators.required, Validators.minLength(6)]]  // Minimum 6 characters for password  
     })    
   };
  
