@@ -1,18 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule,RouterModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
 
   loginForm!: FormGroup;
   errorMessage: string = '';
+
   constructor(
     private auth: AuthService,
     private fb: FormBuilder,
@@ -20,39 +23,47 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.loginForm = this.fb.group({ 
-      email: ['', [Validators.required, Validators.email]],  // Ensures valid email format  
-      mot_de_passe: ['', [Validators.required, Validators.minLength(6)]]  // Minimum 6 characters for password  
-    })    
-  };
- 
-
-
-
-login() {
-  this.router.navigate(['/home'])
-  if (this.loginForm.invalid) {
-    console.log("this.form ", this.loginForm.value);
-
-    return;
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      mot_de_passe: ['', [Validators.required, Validators.minLength(6)]]
+    });
   }
 
-  const { email, password } = this.loginForm.value;
-  this.auth.login(email, password).subscribe((result: any) => {
-    if (result) {
-      this.router.navigate(['/home'])
-
-    } else {
-      this.errorMessage = 'Email ou mot de passe incorrect.';
+  login() {
+    if (this.loginForm.invalid) {
+      console.log("Formulaire invalide :", this.loginForm.value);
+      return;
     }
-  })
-}
-signup() {
-  this.router.navigate(['/signup']);
-}
 
+    const { email, mot_de_passe } = this.loginForm.value;
 
+    this.auth.login(email, mot_de_passe).subscribe({
+      next: (result: any) => {
+        if (result && result.access_token) {
+          localStorage.setItem('access_token', result.access_token);
 
+          this.auth.getProfile().subscribe({
+            next: (user) => {
+              localStorage.setItem('user', JSON.stringify(user));
+              this.router.navigate(['/home']);
+            },
+            error: (err) => {
+              console.error('Erreur récupération utilisateur', err);
+              this.errorMessage = 'Erreur lors de la récupération du profil.';
+            }
+          });
+        } else {
+          this.errorMessage = 'Email ou mot de passe incorrect.';
+        }
+      },
+      error: (err) => {
+        console.error('Erreur login', err);
+        this.errorMessage = 'Identifiants invalides.';
+      }
+    });
+  }
 
-
+  signup() {
+    this.router.navigate(['/signup']);
+  }
 }

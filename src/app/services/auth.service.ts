@@ -1,5 +1,5 @@
 
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core'; 
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -32,4 +32,14 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!localStorage.getItem('user');
   }
+
+  getProfile(): Observable<any> {
+    const token = localStorage.getItem('access_token'); // récupère le token stocké
+    return this.http.get<any>('this.http://localhost:8000/auth/me', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
+  
 }
