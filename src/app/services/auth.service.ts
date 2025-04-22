@@ -34,12 +34,20 @@ export class AuthService {
   }
 
   getProfile(): Observable<any> {
-    const token = localStorage.getItem('access_token'); // récupère le token stocké
-    return this.http.get<any>('this.http://localhost:8000/auth/me', {
+    const token = localStorage.getItem('access_token');
+    return this.http.get<any>(`${this.baseUrl}auth/me`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
+  }
+  updateProfile(formData: FormData):Observable<any>{
+    const token =localStorage.getItem('access_token');
+    const headers = new HttpHeaders({
+      'Authorization': 'Bearer ${token}',
+    });
+    return this.http.put<any>('http://localhost:8000/auth/updateProfile', formData, { headers });
+    
   }
   
 }

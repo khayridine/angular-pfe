@@ -34,4 +34,7 @@ export class HeaderComponent {
   goToHome() {
     this.router.navigate(['/home']);
   }
+  goToportfeuille(){
+    this.router.navigate(['/portfeuille']);
+  }
 }

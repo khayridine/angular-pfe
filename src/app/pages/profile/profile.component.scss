@@ -1,12 +1,62 @@
-.profile-card {
-    background-color: #ffffff;
-    border-radius: 15px;
-  }
-  
-  .profile-img {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border: 5px solid #007bff;
-  }
-  
+.profile-img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border: 3px solid #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;  // Ajout d'un curseur pour indiquer que l'image est cliquable
+}
+
+.card {
+  border-radius: 10px;
+}
+
+.container {
+  max-width: 800px;
+}
+
+/* Icône de retour */
+.back-icon {
+  position: absolute;
+  top: 20px; /* Positionner l'icône à 20px du haut */
+  left: 20px; /* Positionner l'icône à 20px de la gauche */
+  cursor: pointer;
+  font-size: 24px;
+  color: #007bff;
+  transition: color 0.3s ease;
+  z-index: 1000; /* S'assurer qu'il soit toujours au-dessus des autres éléments */
+}
+
+/* Au survol de l'icône */
+.back-icon:hover {
+  color: #0056b3; /* Change la couleur au survol */
+}
+
+/* Icône de retour */
+.back-icon {
+  position: absolute;
+  top: 30px; /* Positionner l'icône un peu plus haut */
+  left: 20px; /* Positionner l'icône à 20px de la gauche */
+  cursor: pointer;
+  font-size: 24px;
+  color: #007bff;
+  transition: color 0.3s ease;
+  z-index: 1000;
+}
+
+/* Au survol de l'icône */
+.back-icon:hover {
+  color: #0056b3;
+}
+
+/* Section du titre et icône alignés */
+.welcome-text {
+  padding-left: 30px; /* Ajuste la distance entre le titre et l'icône */
+}
+
+
+
+
+
+
+
