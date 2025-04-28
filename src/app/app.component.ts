@@ -10,4 +10,5 @@ import { RouterModule, RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   title = 'pfe-front';
+  
 }
