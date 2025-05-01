@@ -6,6 +6,7 @@ import { ProfileComponent } from './pages/profile/profile.component';
 import { PortfeuilleComponent } from './pages/portfeuille/portfeuille.component';
 import { ActionsComponent } from './pages/actions/actions.component';
 
+
 export const routes: Routes = [
     {path:"", component:LoginComponent,},
     {path:"signup", component:SignupComponent},
@@ -13,6 +14,7 @@ export const routes: Routes = [
     {path:"profile", component:ProfileComponent},
     { path: 'portfeuille', component:PortfeuilleComponent},
     { path: 'actions', component: ActionsComponent },
+   
 
     {path:"**",  redirectTo:''},
 

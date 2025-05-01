@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
     selector: 'app-coins',
     templateUrl: './coins.component.html',
-    styleUrls: ['./coins.component.css'],
+    styleUrls: ['./coins.component.scss'],
     imports: [CommonModule, FormsModule],
 })
 export class CoinsComponent {
