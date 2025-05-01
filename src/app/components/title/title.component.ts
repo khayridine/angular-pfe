@@ -10,5 +10,5 @@ import { CommonModule } from '@angular/common';
 })
 export class TitleComponent {
     @Input() label: string = '';
-    @Input() icon: string = ''; 
+     
 } 
