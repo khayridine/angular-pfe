@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { OperationService } from '../../services/operation.service';
 import { NgChartsModule } from 'ng2-charts'; 
 import { ChartType } from 'chart.js'; 
+import { TitleComponent } from '../../components/title/title.component'; // Import du composant TitleComponent
 import { CryptoService } from '../../services/crypto.service'; // Import du service
 
 @Component({
   selector: 'app-portfeuille',
   standalone: true,
-  imports: [CommonModule, NgChartsModule],
+  imports: [CommonModule, NgChartsModule,TitleComponent],
   templateUrl: './portfeuille.component.html',
   styleUrls: ['./portfeuille.component.scss']
 })
@@ -82,4 +83,17 @@ export class PortfeuilleComponent implements OnInit {
   getRandomColor(): string {
     return '#' + Math.floor(Math.random() * 16777215).toString(16);
   }
+  goBackWithFlash(): void {
+    const backIcon = document.querySelector('.back-icon') as HTMLElement;
+    if (backIcon) {
+      backIcon.classList.add('flash');
+  
+    
+      setTimeout(() => {
+        backIcon.classList.remove('flash');
+        window.history.back();
+      }, 300); 
+    }
+  }
 }
+

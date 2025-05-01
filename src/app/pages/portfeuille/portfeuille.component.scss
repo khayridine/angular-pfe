@@ -17,4 +17,13 @@
     margin: 2rem auto;
     max-width: 100%;
   }
+  @keyframes flash {
+    0% { opacity: 1; }
+    50% { opacity: 0.1; }
+    100% { opacity: 1; }
+  }
+  
+  .back-icon.flash {
+    animation: flash 0.3s ease-in-out; 
+  }
   
