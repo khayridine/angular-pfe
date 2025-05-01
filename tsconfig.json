@@ -2,6 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
+    "types": ["chart.js"],
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,

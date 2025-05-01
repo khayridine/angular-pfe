@@ -1,24 +1,30 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '@app/components/header/header.component';
 import { CoinsComponent } from './components/coins/coins.component';
+import { ChartComponent } from './components/chart-portefeuille/chart.component';  // Corrige ici
+
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, HeaderComponent, CoinsComponent],
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss'
+  styleUrls: ['./home.component.scss'],
+  imports: [
+    HeaderComponent, 
+    CoinsComponent, 
+    ChartComponent // Assure-toi que ChartPortefeuilleComponent est bien importé ici
+  ]
 })
 export class HomeComponent {
   message: string = '';
+  operations = [  
+    { id: 1, type: 'Achat', date: '2025-04-29', montant: 300 },
+    { id: 2, type: 'Vente', date: '2025-04-30', montant: 150 },
+    { id: 3, type: 'Vente', date: '2025-04-30', montant: 200 },
+    { id: 4, type: 'Achat', date: '2025-05-01', montant: 500 }
+  ];
 
-  constructor(private router: Router,) {
-   
+  constructor(private router: Router) {}
+  goToPortefeuille(): void  {
+    this.router.navigate(['/portfeuille']);
   }
-
-
- 
-
 }
-
-
