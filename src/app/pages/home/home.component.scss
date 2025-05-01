@@ -1,0 +1,12 @@
+app-herader {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.contrainer {
+    margin-top: 80px; /* Adjust based on the height of app-header */
+    max-height: calc(100vh - 80px); /* Adjust based on the height of app-header */
+    overflow-y: auto;
+}
