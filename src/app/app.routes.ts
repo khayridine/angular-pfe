@@ -5,6 +5,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { PortfeuilleComponent } from './pages/portfeuille/portfeuille.component';
 import { ActionsComponent } from './pages/actions/actions.component';
+import { FormulaireComponent } from './pages/calculateur/formulaire.component'
 
 
 export const routes: Routes = [
@@ -14,6 +15,8 @@ export const routes: Routes = [
     {path:"profile", component:ProfileComponent},
     { path: 'portfeuille', component:PortfeuilleComponent},
     { path: 'actions', component: ActionsComponent },
+    { path: 'formulaire', component: FormulaireComponent},
+
    
 
     {path:"**",  redirectTo:''},

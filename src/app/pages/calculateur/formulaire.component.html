@@ -1,0 +1,46 @@
+<div style="margin-bottom: 30px;">
+    <span class="back-icon" (click)="goBackWithFlash()" style="cursor: pointer; margin-left: 20px; font-size: 20px; color: #2c3e50;">
+      <i class="fas fa-arrow-left"></i> <!-- Icône flèche de FontAwesome -->
+    </span>
+  </div>
+<div class="container mt-5">
+    
+    <h2>Évaluation du profil d'investisseur</h2>
+    <form (ngSubmit)="calculerProfil()" #profilForm="ngForm">
+      <div class="mb-3">
+        <label for="nom" class="form-label">Nom</label>
+        <input type="text" class="form-control" id="nom" name="nom" [(ngModel)]="form.nom" required>
+      </div>
+  
+      <div class="mb-3">
+        <label for="age" class="form-label">Âge</label>
+        <input type="number" class="form-control" id="age" name="age" [(ngModel)]="form.age" required>
+      </div>
+  
+      <div class="mb-3">
+        <label for="revenu" class="form-label">Revenu annuel (€)</label>
+        <input type="number" class="form-control" id="revenu" name="revenu" [(ngModel)]="form.revenu" required>
+      </div>
+  
+      <div class="mb-3">
+        <label for="capital" class="form-label">Capital à investir (€)</label>
+        <input type="number" class="form-control" id="capital" name="capital" [(ngModel)]="form.capital" required>
+      </div>
+  
+      <div class="mb-3">
+        <label for="objectif" class="form-label">Objectif d’investissement</label>
+        <select class="form-select" id="objectif" name="objectif" [(ngModel)]="form.objectif" required>
+          <option value="retraite">Préparer la retraite</option>
+          <option value="achat">Achat immobilier</option>
+          <option value="croissance">Faire croître son capital</option>
+        </select>
+      </div>
+  
+      <button type="submit" class="btn btn-primary">Calculer mon profil</button>
+    </form>
+  
+    <div class="mt-4" *ngIf="profil">
+      <h4>Votre profil d’investisseur : <span class="badge bg-info">{{ profil }}</span></h4>
+    </div>
+  </div>
+  

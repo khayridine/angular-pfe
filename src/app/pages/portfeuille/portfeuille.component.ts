@@ -5,6 +5,7 @@ import { NgChartsModule } from 'ng2-charts';
 import { ChartType } from 'chart.js'; 
 import { TitleComponent } from '../../components/title/title.component'; // Import du composant TitleComponent
 import { CryptoService } from '../../services/crypto.service'; // Import du service
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-portfeuille',
@@ -15,12 +16,12 @@ import { CryptoService } from '../../services/crypto.service'; // Import du serv
 })
 export class PortfeuilleComponent implements OnInit {
   operations: any[] = [];
-  cryptoPrices: any = {}; // Pour stocker les prix des crypto-monnaies
+  cryptoPrices: any = {}; 
   isBrowser: boolean;
   
-  // Déclaration unique du constructeur
-  constructor(private operationService: OperationService, private cryptoService: CryptoService) {
-    // Vérifie si le code est exécuté côté client (navigateur)
+  
+  constructor(private operationService: OperationService, private cryptoService: CryptoService , private router: Router, @Inject(PLATFORM_ID) private platformId: Object) {
+    
     this.isBrowser = typeof window !== 'undefined';
   }
 
@@ -32,14 +33,14 @@ export class PortfeuilleComponent implements OnInit {
     }]
   };
 
-  chartType: ChartType = 'bar';  // Graphique en barres
+  chartType: ChartType = 'bar';  
 
-  // Autres configurations de graphiques
+  
   chartOptions = {
     responsive: true,
     plugins: {
       legend: {
-        position: 'top' as const  // Assurez-vous que la valeur est 'top', 'left', 'right', 'bottom', 'center', ou 'chartArea'
+        position: 'top' as const  
       },
       tooltip: {
         enabled: true
@@ -53,18 +54,18 @@ export class PortfeuilleComponent implements OnInit {
   };
   
   ngOnInit(): void {
-    // Récupérer les opérations
+    
     this.operationService.getOperations().subscribe((data) => {
       this.operations = data;
       this.updateChartData();
     });
 
-    // Appeler l'API des prix des crypto-monnaies
+    
     this.cryptoService.getCryptoPrices().subscribe((data) => {
       this.cryptoPrices = data;
-      // Préparer les données pour le graphique des crypto-monnaies
-      this.chartData.labels = Object.keys(this.cryptoPrices); // Bitcoin, Ethereum, etc.
-      this.chartData.datasets[0].data = Object.values(this.cryptoPrices); // Les prix
+      
+      this.chartData.labels = Object.keys(this.cryptoPrices); 
+      this.chartData.datasets[0].data = Object.values(this.cryptoPrices); 
       this.chartData.datasets[0].backgroundColor = this.chartData.labels.map(() => this.getRandomColor());
     });
   }
@@ -94,6 +95,9 @@ export class PortfeuilleComponent implements OnInit {
         window.history.back();
       }, 300); 
     }
+  }
+  goToFormulaire(): void {
+    this.router.navigate(['/formulaire']);
   }
 }
 
