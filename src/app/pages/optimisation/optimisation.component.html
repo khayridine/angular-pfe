@@ -1,0 +1,51 @@
+<h2>Optimisation de portefeuille (Markowitz)</h2>
+
+<div>
+  <label>Nombre d’actifs :
+    <input type="number" [(ngModel)]="assetsCount" (change)="initMatrix()" min="2" />
+  </label>
+</div>
+
+<form (ngSubmit)="submit()">
+  <h3>Espérances de rendement E(Ri)</h3>
+  <div *ngFor="let val of expectedReturns; let i = index">
+    Actif {{ i + 1 }} :
+    <input type="number" step="0.01" [(ngModel)]="expectedReturns[i]" name="er{{i}}" />
+  </div>
+
+  <h3>Matrice de variance-covariance</h3>
+  <div *ngFor="let row of covarianceMatrix; let i = index">
+    <div *ngFor="let col of row; let j = index">
+      <input type="number" step="0.01" [(ngModel)]="covarianceMatrix[i][j]" name="cov{{i}}{{j}}" />
+    </div>
+  </div>
+
+  <label>Rentabilité cible E(Rp) :
+    <input type="number" step="0.01" [(ngModel)]="targetReturn" name="target" />
+  </label>
+
+  <button type="submit">Calculer la composition optimale</button>
+</form>
+
+<div *ngIf="result">
+  <h3>Résultat :</h3>
+  <p>Composition optimale (x*) :</p>
+  <ul>
+    <li *ngFor="let w of result.optimal_weights; let i = index">
+      Actif {{ i + 1 }} : {{ w | number:'1.4-4' }}
+    </li>
+  </ul>
+  <p>Variance du portefeuille : {{ result.variance | number:'1.4-4' }}</p>
+</div>
+
+<button (click)="getFrontiere()">Afficher la frontière efficiente</button>
+
+<div style="width: 100%; max-width: 700px; margin-top: 20px">
+  <div *ngIf="isBrowser">
+    <canvas baseChart
+      [data]="chartData"
+      [options]="chartOptions"
+      chartType="line">
+    </canvas>
+  </div>
+</div>
