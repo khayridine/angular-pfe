@@ -1,0 +1,26 @@
+<div class="p-4">
+  
+  <app-title [label]="'Realtime Bulk Quotes'"></app-title>
+
+  <table class="w-full table-auto border-collapse shadow-sm rounded overflow-hidden">
+    <thead class="bg-gray-100 text-left">
+      <tr>
+        <th *ngFor="let title of titles" class="px-4 py-2 border-b border-gray-200">{{ title }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let quote of filteredQuotes" class="hover:bg-gray-50">
+        <td class="px-4 py-2 border-b border-gray-100">{{ quote.symbol }}</td>
+        <td class="px-4 py-2 border-b border-gray-100">{{ quote.open }}</td>
+        <td class="px-4 py-2 border-b border-gray-100">{{ quote.high }}</td>
+        <td class="px-4 py-2 border-b border-gray-100">{{ quote.low }}</td>
+        <td class="px-4 py-2 border-b border-gray-100">{{ quote.close }}</td>
+        <td class="px-4 py-2 border-b border-gray-100">{{ quote.volume }}</td>
+        <td class="px-4 py-2 border-b border-gray-100 font-medium" [ngClass]="{'positive-change': +quote.change > 0, 'negative-change': +quote.change < 0 }">
+          {{ quote.change }} ({{ quote.change_percent }}%)
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
+</div>

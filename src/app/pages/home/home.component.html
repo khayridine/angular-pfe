@@ -1,57 +1,57 @@
-
-
+<app-header />
 <div class="container">
-    <app-header />
+
     <div class=" p-2">
 
         <div class="row">
-            <div class="col-6">
+            <div class="col-5">
+
                 <app-chart-portefeuille [operations]="operations"></app-chart-portefeuille>
                 <div style="text-align: center; margin-top: 1rem;">
                     <button (click)="goToPortefeuille()" class="btn btn-primary">
-                      Voir Details Portefeuille
+                        Voir Details Portefeuille
                     </button>
-                  </div>
-                
-                  
+                </div>
+
+
             </div>
-            <div class="col-6">
-                <app-dividendes/>
-                
+            <div class="col-7">
+                <app-bulk-quotes />
             </div>
         </div>
-    
+
         <div class="row mt-4">
-            <div class="col-7">
+            <div class="col-6">
                 <app-title [label]="'Comprendre l’Achat, la Vente et les Cryptomonnaies'"></app-title>
-                <div style="background-color: #7fbbf8; padding: 20px; border-radius: 12px; font-size: 16px; line-height: 1.6;"> 
-                    Les cryptomonnaies révolutionnent le monde de la finance grâce à leur fonctionnement décentralisé et sécurisé.
+                <div
+                    style="background-color: #7fbbf8; padding: 20px; border-radius: 12px; font-size: 16px; line-height: 1.6;">
+                    Les cryptomonnaies révolutionnent le monde de la finance grâce à leur fonctionnement décentralisé et
+                    sécurisé.
                     Qu’il s’agisse d’<strong>acheter</strong> des coins pour investir,
-                    ou de <strong>vendre</strong> afin de réaliser un gain, 
-                    chaque transaction repose sur une technologie appelée <em>blockchain</em>. 
+                    ou de <strong>vendre</strong> afin de réaliser un gain,
+                    chaque transaction repose sur une technologie appelée <em>blockchain</em>.
                     Ces actifs numériques sont disponibles 24h/24 sur des plateformes d’échange,
                     offrant aux utilisateurs une liberté totale dans la gestion de leur portefeuille.
-                    Bien plus qu’une simple tendance, 
+                    Bien plus qu’une simple tendance,
                     les cryptomonnaies représentent aujourd’hui un nouvel horizon économique.
                 </div>
             </div>
-            
-            
-            <div class="col-5 d-flex align-items-center">
+
+
+            <div class="col-6 d-flex align-items-center">
                 <app-coins />
             </div>
         </div>
-        <div class="col-7 ">
-            <app-title [label]="'Définition de la rentabilité'"></app-title>
-                <p>La rentabilité est un indicateur financier permettant de mesurer les bénéfices d'une entreprise ou d'un projet par rapport aux capitaux qui ont été investis.</p>
-               <p> Autrement dit, la rentabilité est caractérisée par le rapport entre les profits et l'argent mobilisé pour obtenir ces profits.</p>
-                
-            
+        <div class="row mt-4">
+            <div class="col-6 ">
 
-    
+                <app-dividendes />
+            </div>
+            
         </div>
-    
+
+
+
     </div>
 
 </div>
-

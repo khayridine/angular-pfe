@@ -1,35 +1,31 @@
 <mat-toolbar color="primary" class="header">
 
-  <!-- Menu Hamburger -->
-  <button mat-icon-button [matMenuTriggerFor]="menu">
-    <mat-icon>menu</mat-icon>
-  </button>
+ 
+  <span style="font-weight: bold;">MonApp</span>
 
+  
+
+  <!-- Menu principal directement dans la barre -->
+  <button mat-button (click)="goToHome()" style="color: white;">
+    
+    <span>Menu</span>
+  </button>
+  <button mat-button (click)="goToportfeuille()" style="color: white;">
+   
+    <span>Portefeuille</span>
+  </button>
+  <button mat-button (click)="goToactions()" style="color: white;">
+    
+    <span>Action</span>
+  </button>
   <!-- Espace flexible pour pousser le profil à droite -->
   <span class="flex-spacer"></span>
-
   <!-- Icône de profil -->
   <button mat-icon-button [matMenuTriggerFor]="profileMenu">
     <mat-icon>account_circle</mat-icon>
   </button>
 
 </mat-toolbar>
-
-<!-- Menu principal -->
-<mat-menu #menu="matMenu">
-  <button mat-menu-item (click)="goToHome()">
-    <mat-icon>home</mat-icon>
-    <span>Menu</span>
-  </button>
-  <button mat-menu-item (click)="goToportfeuille()">
-    <mat-icon>account_balance_wallet</mat-icon>
-    <span>Portefeuille</span>
-  </button>
-  <button mat-menu-item (click)="goToactions()">
-    <mat-icon>settings</mat-icon>
-    <span>Action</span>
-  </button>
-</mat-menu>
 
 <!-- Menu profil -->
 <mat-menu #profileMenu="matMenu">
