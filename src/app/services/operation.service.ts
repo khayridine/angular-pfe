@@ -23,4 +23,5 @@ export class OperationService {
   getOperations(): Observable<Operation[]> {
     return this.http.get<Operation[]>(this.apiUrl);
   }
+  
 }

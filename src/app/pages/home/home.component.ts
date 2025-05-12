@@ -31,4 +31,10 @@ export class HomeComponent {
   goToPortefeuille(): void  {
     this.router.navigate(['/portfeuille']);
   }
+  
+  goToOptimisation(): void  {
+    this.router.navigate(['/optimisation']);
+    
+    
+  }
 }
