@@ -24,7 +24,7 @@
     "@angular/ssr": "^19.2.0",
     "@browsery/util": "^0.12.6-r2",
     "@popperjs/core": "^2.11.8",
-    "bootstrap": "^5.3.3",
+    "bootstrap": "^5.3.6",
     "chart.js": "^4.4.9",
     "express": "^4.18.2",
     "font-awesome": "^4.7.0",

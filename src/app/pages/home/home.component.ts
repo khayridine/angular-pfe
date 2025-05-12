@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { HeaderComponent } from '@app/components/header/header.component';
 import { CoinsComponent } from './components/coins/coins.component';
 import { ChartComponent } from './components/chart-portefeuille/chart.component';  // Corrige ici
-
+import { DividendesComponent } from './components/dividendes/dividendes.component';
+import { TitleComponent } from '@app/components/title/title.component';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -11,8 +12,9 @@ import { ChartComponent } from './components/chart-portefeuille/chart.component'
   imports: [
     HeaderComponent, 
     CoinsComponent, 
-    ChartComponent // Assure-toi que ChartPortefeuilleComponent est bien importé ici
-  ]
+    ChartComponent,
+    DividendesComponent ,
+    TitleComponent]
 })
 export class HomeComponent {
   message: string = '';

@@ -37,4 +37,6 @@ export class HeaderComponent {
   goToportfeuille(){
     this.router.navigate(['/portfeuille']);
   }
+  goToactions(){
+    this.router.navigate(['/actions']);}
 }

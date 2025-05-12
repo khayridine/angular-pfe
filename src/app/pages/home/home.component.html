@@ -16,16 +16,14 @@
                   
             </div>
             <div class="col-6">
-                <h3>Définition de la rentabilité</h3>
-                <p>La rentabilité est un indicateur financier permettant de mesurer les bénéfices d'une entreprise ou d'un projet par rapport aux capitaux qui ont été investis.</p>
-               <p> Autrement dit, la rentabilité est caractérisée par le rapport entre les profits et l'argent mobilisé pour obtenir ces profits.</p>
+                <app-dividendes/>
                 
             </div>
         </div>
     
         <div class="row mt-4">
             <div class="col-7">
-                <h3>Comprendre l’Achat, la Vente et les Cryptomonnaies</h3>
+                <app-title [label]="'Comprendre l’Achat, la Vente et les Cryptomonnaies'"></app-title>
                 <div style="background-color: #7fbbf8; padding: 20px; border-radius: 12px; font-size: 16px; line-height: 1.6;"> 
                     Les cryptomonnaies révolutionnent le monde de la finance grâce à leur fonctionnement décentralisé et sécurisé.
                     Qu’il s’agisse d’<strong>acheter</strong> des coins pour investir,
@@ -43,7 +41,13 @@
                 <app-coins />
             </div>
         </div>
-        <div class="col-5 d-flex align-items-center">
+        <div class="col-7 ">
+            <app-title [label]="'Définition de la rentabilité'"></app-title>
+                <p>La rentabilité est un indicateur financier permettant de mesurer les bénéfices d'une entreprise ou d'un projet par rapport aux capitaux qui ont été investis.</p>
+               <p> Autrement dit, la rentabilité est caractérisée par le rapport entre les profits et l'argent mobilisé pour obtenir ces profits.</p>
+                
+            
+
     
         </div>
     

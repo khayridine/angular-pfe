@@ -85,5 +85,17 @@ export class OptimisationComponent {
   };
 
 }
+goBackWithFlash(): void {
+  const backIcon = document.querySelector('.back-icon') as HTMLElement;
+  if (backIcon) {
+    backIcon.classList.add('flash');
+
+  
+    setTimeout(() => {
+      backIcon.classList.remove('flash');
+      window.history.back();
+    }, 300); 
+  }
+}
 
 }
