@@ -47,7 +47,7 @@ export class OptimisationComponent {
 
     this.http.post<any>('http://localhost:8000/efficient-frontier', payload).subscribe({
         next: (res) => {
-          console.log("Réponse backend :", res);
+          
           this.chartData.labels = res.risks;
           this.chartData.datasets[0].data = res.returns;
         },

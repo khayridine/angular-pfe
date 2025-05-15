@@ -5,6 +5,7 @@
 
         <div class="row">
             <div class="col-5">
+                
 
                 <app-chart-portefeuille [operations]="operations"></app-chart-portefeuille>
                 <div style="text-align: center; margin-top: 1rem;">
@@ -22,7 +23,13 @@
             </div>
             <div class="col-7">
                 <app-bulk-quotes />
+                <div>
+                    <button (click)="goToCreatePortefeuille()" class="btn btn-success mt-2">
+                      Créer un portefeuille
+                    </button>
+                  </div>
             </div>
+            
         </div>
 
         <div class="row mt-4">
@@ -54,9 +61,12 @@
             </div>
             
         </div>
+        
 
 
 
     </div>
+    
 
 </div>
+<app-footer></app-footer>

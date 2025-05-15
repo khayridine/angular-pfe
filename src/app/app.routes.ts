@@ -7,6 +7,7 @@ import { PortfeuilleComponent } from './pages/portfeuille/portfeuille.component'
 import { ActionsComponent } from './pages/actions/actions.component';
 import { FormulaireComponent } from './pages/calculateur/formulaire.component'
 import { OptimisationComponent } from './pages/optimisation/optimisation.component';
+import { CreatePortefeuilleComponent } from './pages/create-portefeuille/create-portefeuille.component'
 
 export const routes: Routes = [
     {path:"", component:LoginComponent,},
@@ -17,6 +18,8 @@ export const routes: Routes = [
     { path: 'actions', component: ActionsComponent },
     { path: 'formulaire', component: FormulaireComponent},
     {path: 'optimisation', component: OptimisationComponent},
+    { path: 'create-portefeuille', component: CreatePortefeuilleComponent },
+
 
    
 

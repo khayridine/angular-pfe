@@ -4,7 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { UserData } from '@app/entity/user-data';
+import { UserData } from '@app/model/user-data';
 
 @Component({
   selector: 'app-signup',
