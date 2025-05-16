@@ -1,0 +1,64 @@
+
+<div class="container mt-4">
+    <div style="margin-bottom: 30px;">
+        <span class="back-icon" (click)="goBackWithFlash()" style="cursor: pointer; margin-left: 20px; font-size: 20px; color: #2c3e50;">
+          <i class="fas fa-arrow-left"></i> <!-- Icône flèche de FontAwesome -->
+        </span>
+      </div>
+    <h2 class="mb-4">Optimisation de portefeuille (Markowitz)</h2>
+  
+    <div class="form-group mb-3">
+      <label>Nombre d’actifs :</label>
+      <input type="number" [(ngModel)]="assetsCount" (change)="initMatrix()" min="2" class="form-control w-auto d-inline-block ms-2" />
+    </div>
+  
+    <form (ngSubmit)="submit()">
+      <h4 class="mt-4">Espérances de rendement E(Ri)</h4>
+      <div class="row">
+        <div class="col-md-3 mb-2" *ngFor="let val of expectedReturns; let i = index">
+          <label>Actif {{ i + 1 }}</label>
+          <input type="number" step="0.01" [(ngModel)]="expectedReturns[i]" name="er{{i}}" class="form-control" />
+        </div>
+      </div>
+  
+      <h4 class="mt-4">Matrice de variance-covariance</h4>
+      <div *ngFor="let row of covarianceMatrix; let i = index" class="mb-2">
+        <div class="row">
+          <div class="col" *ngFor="let col of row; let j = index">
+            <input type="number" step="0.01" [(ngModel)]="covarianceMatrix[i][j]" name="cov{{i}}{{j}}" class="form-control" />
+          </div>
+        </div>
+      </div>
+  
+      <div class="form-group mt-3 mb-3">
+        <label>Rentabilité cible E(Rp) :</label>
+        <input type="number" step="0.01" [(ngModel)]="targetReturn" name="target" class="form-control w-auto d-inline-block ms-2" />
+      </div>
+  
+      <button type="submit" class="btn btn-primary mt-3">Calculer la composition optimale</button>
+    </form>
+  
+    <div *ngIf="result" class="mt-4">
+      <h4>Résultat :</h4>
+      <p>Composition optimale (x*) :</p>
+      <ul>
+        <li *ngFor="let w of result.optimal_weights; let i = index">
+          Actif {{ i + 1 }} : {{ w | number:'1.4-4' }}
+        </li>
+      </ul>
+      <p>Variance du portefeuille : {{ result.variance | number:'1.4-4' }}</p>
+    </div>
+  
+    <button (click)="getFrontiere()" class="btn btn-success mt-3">Afficher la frontière efficiente</button>
+  
+    <div style="width: 100%; max-width: 700px; margin-top: 20px">
+      <div *ngIf="isBrowser">
+        <canvas baseChart
+          [data]="chartData"
+          [options]="chartOptions"
+          chartType="line">
+        </canvas>
+      </div>
+    </div>
+  </div>
+  

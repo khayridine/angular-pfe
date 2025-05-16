@@ -1,0 +1,18 @@
+.btn-animated {
+    background: linear-gradient(135deg, #007bff, #00d4ff);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+  }
+  
+  .btn-animated:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #0056b3, #0096c7);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.6);
+  }
+  

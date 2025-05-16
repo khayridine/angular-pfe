@@ -3,11 +3,12 @@ import { Coin } from '@app/model/coins';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TitleComponent } from '@app/components/title/title.component';
 @Component({
     selector: 'app-coins',
     templateUrl: './coins.component.html',
     styleUrls: ['./coins.component.scss'],
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, TitleComponent],
 })
 export class CoinsComponent {
     api: string =

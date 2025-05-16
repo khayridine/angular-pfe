@@ -1,5 +1,5 @@
 .header {
-  background-color: #19d2c9;
+  background-color: #1376da;
   color: white;
   display: flex;
   justify-content: space-between;
@@ -14,3 +14,21 @@
     flex: 1 1 auto;
   }
 }
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1976d2; /* Bleu Angular */
+}
+
+.menu-container {
+  display: flex;
+  gap: 10px;  /* Espacement léger entre les boutons */
+}
+
+mat-toolbar button {
+  font-weight: 500;
+}
+
+
+

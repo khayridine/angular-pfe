@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
+import { Portefeuille } from '../model/portefeuille';
 export interface Operation {
   id: number;
   type: string;
@@ -16,11 +16,16 @@ export interface Operation {
   providedIn: 'root',
 })
 export class OperationService {
-  private apiUrl = 'http://localhost:8000/operations';
+  private apiUrl = 'http://localhost:8000/'; 
 
   constructor(private http: HttpClient) {}
 
   getOperations(): Observable<Operation[]> {
-    return this.http.get<Operation[]>(this.apiUrl);
+    return this.http.get<Operation[]>(this.apiUrl+'operations');
   }
+
+  savePortefeuille(portefeuille: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl+'save-portefeuille', portefeuille);
+  } 
+  
 }
