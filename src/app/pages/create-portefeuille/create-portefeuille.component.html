@@ -85,6 +85,9 @@
   <div class="mt-4">
     <button class="btn btn-info" (click)="afficherAnalyse()">Analyser le portefeuille</button>
   </div>
+  <div *ngIf="messageErreur" class="alert alert-danger mt-3">
+    {{ messageErreur }}
+  </div>
 
   <div class="alert alert-info mt-3" *ngIf="afficherResultats && messageRendementTitre">
     <h5 class="fw-bold mb-2">{{ messageRendementTitre }}</h5>

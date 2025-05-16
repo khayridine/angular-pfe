@@ -22,6 +22,7 @@ export class CreatePortefeuilleComponent implements OnInit {
   afficherResultats: boolean = false;
   messageRendementTitre: string = '';
   messageRendementTexte: string = '';
+  messageErreur: string = '';
 
   constructor(
     private OperationService: OperationService,
@@ -53,12 +54,13 @@ export class CreatePortefeuilleComponent implements OnInit {
   };
 
   afficherAnalyse() {
-    // Validation avant analyse
+    this.messageErreur = ''; // Reset
+  
     if (this.actifs.length === 0) {
-      alert("Veuillez ajouter au moins un actif avant d'analyser le portefeuille.");
+      this.messageErreur = "Veuillez ajouter au moins un actif avant d'analyser le portefeuille.";
       return;
     }
-
+  
     for (const actif of this.actifs) {
       if (
         !actif.nom?.trim() ||
@@ -67,29 +69,26 @@ export class CreatePortefeuilleComponent implements OnInit {
         actif.rendement == null ||
         actif.volatilite == null || actif.volatilite <= 0
       ) {
-        alert(
-          "Veuillez remplir correctement tous les champs de chaque actif avant d'analyser \n" 
-         
-        );
+        this.messageErreur = "Veuillez remplir correctement tous les champs de chaque actif avant d'analyser.";
         return;
       }
-
+  
       const regexDeuxDecimales = /^\d+(\.\d{1,2})?$/;
       if (
         !regexDeuxDecimales.test(actif.pourcentage.toString()) ||
         !regexDeuxDecimales.test(actif.rendement.toString()) ||
         !regexDeuxDecimales.test(actif.volatilite.toString())
       ) {
-        alert("Les valeurs numériques doivent avoir au maximum 2 chiffres après la virgule.");
+        this.messageErreur = "Les valeurs numériques doivent avoir au maximum 2 chiffres après la virgule.";
         return;
       }
     }
-
-    // Analyse et affichage
+  
     this.mettreAJourGraphique();
     this.calculerRendement();
     this.afficherResultats = true;
   }
+  
 
   ajouterActif() {
     this.actifs.push({ nom: '', categorie: '', type: '', pourcentage: 0, rendement: 0, volatilite: 0 });
