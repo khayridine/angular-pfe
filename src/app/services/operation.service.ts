@@ -24,7 +24,7 @@ export class OperationService {
     return this.http.get<Operation[]>(this.apiUrl+'operations');
   }
 
-  savePortefeuille(portefeuille: Portefeuille): Observable<any> {
+  savePortefeuille(portefeuille: any): Observable<any> {
     return this.http.post<any>(this.apiUrl+'save-portefeuille', portefeuille);
   } 
   

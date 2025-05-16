@@ -1,11 +1,14 @@
-<!-- create-portefeuille.component.html -->
 <div class="container mt-4">
   <div style="margin-bottom: 30px;">
     <span class="back-icon" (click)="goBackWithFlash()"
       style="cursor: pointer; margin-left: 20px; font-size: 20px; color: #2c3e50;">
-      <i class="fas fa-arrow-left"></i> <!-- Icône flèche de FontAwesome -->
+      <i class="fas fa-arrow-left"></i>
     </span>
+    <h3 class="welcome-message" *ngIf="user?.nom" style="margin: 0; color: #1e90ff;">
+      Bienvenue, {{ user.prenom }} {{ user.nom }}
+    </h3>
   </div>
+
   <h2>Créer un portefeuille</h2>
   <p class="text-muted">Retrouvez ici un aperçu complet de vos portefeuilles, vos performances, et vos opportunités
     d’optimisation.</p>
@@ -23,11 +26,12 @@
     <div class="form-row row">
       <div class="col-md-2">
         <label>Nom de l’actif</label>
-        <input type="text" class="form-control" [(ngModel)]="actif.nom">
+        <input type="text" class="form-control" [(ngModel)]="actif.nom" required>
       </div>
       <div class="col-md-2">
         <label>Catégorie</label>
-        <select class="form-control" [(ngModel)]="actif.categorie">
+        <select class="form-control" [(ngModel)]="actif.categorie" required>
+          <option value="" disabled selected>Choisir...</option>
           <option>Action</option>
           <option>Crypto</option>
           <option>Obligation</option>
@@ -41,24 +45,47 @@
       </div>
       <div class="col-md-2">
         <label>% d’allocation</label>
-        <input type="number" class="form-control" [(ngModel)]="actif.pourcentage">
+        <input
+          type="number"
+          class="form-control"
+          [(ngModel)]="actif.pourcentage"
+          required
+          min="0.01"
+          max="100"
+          step="0.01"
+        >
       </div>
       <div class="col-md-2">
         <label>Rendement estimé (%)</label>
-        <input type="number" class="form-control" [(ngModel)]="actif.rendement">
+        <input
+          type="number"
+          class="form-control"
+          [(ngModel)]="actif.rendement"
+          required
+          step="0.01"
+        >
       </div>
       <div class="col-md-2">
         <label>Volatilité estimée (%)</label>
-        <input type="number" class="form-control" [(ngModel)]="actif.volatilite">
+        <input
+          type="number"
+          class="form-control"
+          [(ngModel)]="actif.volatilite"
+          required
+          min="0.01"
+          step="0.01"
+        >
       </div>
     </div>
     <div class="text-end mt-2">
       <button class="btn btn-danger" (click)="supprimerActif(i)">Supprimer</button>
     </div>
   </div>
+
   <div class="mt-4">
     <button class="btn btn-info" (click)="afficherAnalyse()">Analyser le portefeuille</button>
   </div>
+
   <div class="alert alert-info mt-3" *ngIf="afficherResultats && messageRendementTitre">
     <h5 class="fw-bold mb-2">{{ messageRendementTitre }}</h5>
     <p class="mb-0">{{ messageRendementTexte }}</p>
@@ -66,12 +93,9 @@
 
   <div class="mt-4 d-flex justify-content-center" *ngIf="afficherResultats">
     <div style="max-width: 300px;">
-      <canvas baseChart [data]="chartData" [type]="'pie'">
-      </canvas>
+      <canvas baseChart [data]="chartData" [type]="'pie'"></canvas>
     </div>
   </div>
-
-
 
   <div class="mt-4 d-flex gap-2">
     <button class="btn btn-primary" (click)="savePortefeuille()">Enregistrer le portefeuille</button>
