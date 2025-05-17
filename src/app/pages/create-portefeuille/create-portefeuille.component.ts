@@ -1,12 +1,11 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ChartConfiguration } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
 import { Actif } from 'src/app/model/actif';
 import { OperationService } from 'src/app/services/operation.service';
-import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-create-portefeuille',
@@ -27,21 +26,18 @@ export class CreatePortefeuilleComponent implements OnInit {
   constructor(
     private OperationService: OperationService,
     private router: Router,
-    private authService: AuthService,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) { }
 
-  ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-    const token = localStorage.getItem('access_token');
-    const user = localStorage.getItem('user');
-    if (!token || !user) {
-      window.location.href = '/login';
-    } else {
-      this.user = JSON.parse(user);
-    }
+  ngOnInit(): void { 
+      const token = localStorage.getItem('access_token');
+      const user = localStorage.getItem('user');
+      if (!token || !user) {
+       // window.location.href = '/login';
+      } else {
+        this.user = JSON.parse(user);
+      }
+ 
   }
-}
 
   chartData: ChartConfiguration<'pie'>['data'] = {
     labels: [],
@@ -55,12 +51,12 @@ export class CreatePortefeuilleComponent implements OnInit {
 
   afficherAnalyse() {
     this.messageErreur = ''; // Reset
-  
+
     if (this.actifs.length === 0) {
       this.messageErreur = "Veuillez ajouter au moins un actif avant d'analyser le portefeuille.";
       return;
     }
-  
+
     for (const actif of this.actifs) {
       if (
         !actif.nom?.trim() ||
@@ -72,7 +68,7 @@ export class CreatePortefeuilleComponent implements OnInit {
         this.messageErreur = "Veuillez remplir correctement tous les champs de chaque actif avant d'analyser.";
         return;
       }
-  
+
       const regexDeuxDecimales = /^\d+(\.\d{1,2})?$/;
       if (
         !regexDeuxDecimales.test(actif.pourcentage.toString()) ||
@@ -83,12 +79,12 @@ export class CreatePortefeuilleComponent implements OnInit {
         return;
       }
     }
-  
+
     this.mettreAJourGraphique();
     this.calculerRendement();
     this.afficherResultats = true;
   }
-  
+
 
   ajouterActif() {
     this.actifs.push({ nom: '', categorie: '', type: '', pourcentage: 0, rendement: 0, volatilite: 0 });
@@ -105,6 +101,7 @@ export class CreatePortefeuilleComponent implements OnInit {
     this.chartData.labels = [];
     this.chartData.datasets[0].data = [];
     this.messageRendement = '';
+    this.messageErreur = '';
     this.afficherResultats = false;
   }
 
@@ -168,9 +165,8 @@ export class CreatePortefeuilleComponent implements OnInit {
         actif.rendement == null ||
         actif.volatilite == null || actif.volatilite <= 0
       ) {
-        alert(
-          'Veuillez remplir correctement tous les champs obligatoires :\n' 
-          );
+        this.messageErreur = 'Veuillez remplir correctement tous les champs obligatoires avant de sauvegarder.';
+
         return;
       }
 
@@ -180,7 +176,7 @@ export class CreatePortefeuilleComponent implements OnInit {
         !regexDeuxDecimales.test(actif.rendement.toString()) ||
         !regexDeuxDecimales.test(actif.volatilite.toString())
       ) {
-        alert('Les valeurs numériques doivent avoir au maximum 2 chiffres après la virgule.');
+        this.messageErreur = 'Les valeurs numériques doivent avoir au maximum 2 chiffres après la virgule.';
         return;
       }
     }
