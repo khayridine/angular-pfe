@@ -5,11 +5,12 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
 import { Inject, PLATFORM_ID } from '@angular/core';
+import { HeaderComponent } from '@app/components/header/header.component';
 
 @Component({
   selector: 'app-optimisation',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule,NgChartsModule],
+  imports: [CommonModule, FormsModule, HttpClientModule,NgChartsModule, HeaderComponent],
   templateUrl: './optimisation.component.html',
   styleUrls: ['./optimisation.component.scss']
 })
@@ -85,17 +86,6 @@ export class OptimisationComponent {
   };
 
 }
-goBackWithFlash(): void {
-  const backIcon = document.querySelector('.back-icon') as HTMLElement;
-  if (backIcon) {
-    backIcon.classList.add('flash');
 
-  
-    setTimeout(() => {
-      backIcon.classList.remove('flash');
-      window.history.back();
-    }, 300); 
-  }
-}
 
 }

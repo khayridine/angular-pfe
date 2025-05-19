@@ -1,9 +1,7 @@
-<div *ngIf="operations.length > 0; else noData">
-  <div style="margin-bottom: 30px;">
-    <span class="back-icon" (click)="goBackWithFlash()" style="cursor: pointer; margin-left: 20px; font-size: 20px; color: #2c3e50;">
-      <i class="fas fa-arrow-left"></i> <!-- Icône flèche de FontAwesome -->
-    </span>
-  </div>
+<app-header />
+
+<div *ngIf="operations.length > 0; else noData" style="margin-top: 30px;">
+  
   
   <table style="width: 100%; border-collapse: collapse; background-color: #fff; border-radius: 8px; overflow: hidden;">
     <thead style="background-color: #1376da; color: white;">

@@ -2,15 +2,17 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HeaderComponent } from '@app/components/header/header.component';
 import { ChartConfiguration } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
 import { Actif } from 'src/app/model/actif';
 import { OperationService } from 'src/app/services/operation.service';
 
+
 @Component({
   selector: 'app-create-portefeuille',
   templateUrl: './create-portefeuille.component.html',
-  imports: [FormsModule, CommonModule, NgChartsModule],
+  imports: [FormsModule, CommonModule, NgChartsModule,HeaderComponent],
   standalone: true,
 })
 export class CreatePortefeuilleComponent implements OnInit {
@@ -28,15 +30,19 @@ export class CreatePortefeuilleComponent implements OnInit {
     private router: Router,
   ) { }
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
+    if (typeof window !== 'undefined' && window.localStorage) {
       const token = localStorage.getItem('access_token');
       const user = localStorage.getItem('user');
       if (!token || !user) {
-       // window.location.href = '/login';
+        window.location.href = '/login';
       } else {
         this.user = JSON.parse(user);
       }
- 
+    } else {
+      
+      
+    }
   }
 
   chartData: ChartConfiguration<'pie'>['data'] = {
@@ -65,7 +71,7 @@ export class CreatePortefeuilleComponent implements OnInit {
         actif.rendement == null ||
         actif.volatilite == null || actif.volatilite <= 0
       ) {
-        this.messageErreur = "Veuillez remplir correctement tous les champs de chaque actif avant d'analyser.";
+        this.messageErreur = "Veuillez remplir correctement tous les champs de chaque obligatoires actif avant d'analyser.";
         return;
       }
 
@@ -183,7 +189,7 @@ export class CreatePortefeuilleComponent implements OnInit {
 
     try {
       const portefeuille = {
-        montantTotal: this.montantTotal,
+        montant_total: this.montantTotal,
         actifs: this.actifs.map(actif => ({
           nom: actif.nom,
           categorie: actif.categorie,
@@ -193,6 +199,7 @@ export class CreatePortefeuilleComponent implements OnInit {
           volatilite: actif.volatilite,
         })),
       };
+      console.log('Portefeuille envoyé :', portefeuille); 
       this.OperationService.savePortefeuille(portefeuille).subscribe({
         next: (response) => {
           console.log('Portefeuille sauvegardé avec succès :', response);
@@ -207,14 +214,5 @@ export class CreatePortefeuilleComponent implements OnInit {
     }
   }
 
-  goBackWithFlash(): void {
-    const backIcon = document.querySelector('.back-icon') as HTMLElement;
-    if (!backIcon) return;
-
-    backIcon.style.color = '#228B22'; // vert foncé
-    setTimeout(() => {
-      backIcon.style.color = '#2c3e50'; // couleur initiale
-      this.router.navigate(['/dashboard']);
-    }, 1000);
-  }
+  
 }

@@ -2,12 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TitleComponent } from "../../components/title/title.component";
+import { HeaderComponent } from '@app/components/header/header.component';
 
 @Component({
   selector: 'app-formulaire',
   templateUrl: './formulaire.component.html',
   styleUrls: ['./formulaire.component.scss'],
-  imports: [FormsModule, CommonModule, TitleComponent],
+  imports: [FormsModule, CommonModule, TitleComponent,HeaderComponent],
 })
 export class FormulaireComponent {
   form = {
