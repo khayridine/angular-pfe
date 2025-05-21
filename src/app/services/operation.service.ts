@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
+import { Portefeuille } from '../model/portefeuille';
 export interface Operation {
   id: number;
   type: string;
@@ -24,8 +24,13 @@ export class OperationService {
     return this.http.get<Operation[]>(this.apiUrl+'operations');
   }
 
-  savePortefeuille(portefeuille: any): Observable<any> {
+
+
+  savePortefeuille(portefeuille: Portefeuille): Observable<any> {
     return this.http.post<any>(this.apiUrl+'portefeuille/save-portefeuille', portefeuille);
   } 
   
+  getPorfeuilles(): Observable<Portefeuille[]> {
+    return this.http.get<Portefeuille[]>(this.apiUrl+'portefeuille/portefeuilles');
+  }
 }

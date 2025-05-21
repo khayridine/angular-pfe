@@ -1,6 +1,6 @@
 import { Actif } from "./actif";
 
 export interface Portefeuille{   
-    montantTotal: number;
+    montant_total: number;
     actifs: Actif[];
 }

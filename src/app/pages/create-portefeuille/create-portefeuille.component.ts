@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '@app/components/header/header.component';
+import { Portefeuille } from '@app/model/portefeuille';
 import { ChartConfiguration } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
 import { Actif } from 'src/app/model/actif';
@@ -16,6 +17,7 @@ import { OperationService } from 'src/app/services/operation.service';
   standalone: true,
 })
 export class CreatePortefeuilleComponent implements OnInit {
+
   user: any;
   montantTotal: number = 0;
   actifs: Actif[] = [];
@@ -24,9 +26,19 @@ export class CreatePortefeuilleComponent implements OnInit {
   messageRendementTitre: string = '';
   messageRendementTexte: string = '';
   messageErreur: string = '';
+  chartData: ChartConfiguration<'pie'>['data'] = {
+    labels: [],
+    datasets: [
+      {
+        data: [],
+        backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726', '#AB47BC', '#FF7043'],
+      },
+    ],
+  };
+  portefeuillesList: Portefeuille[]= [];
 
   constructor(
-    private OperationService: OperationService,
+    private operationService: OperationService,
     private router: Router,
   ) { }
 
@@ -39,22 +51,31 @@ export class CreatePortefeuilleComponent implements OnInit {
       } else {
         this.user = JSON.parse(user);
       }
-    } else {
-      
-      
-    }
+    }  
+    this.getPortefeuilles();
   }
 
-  chartData: ChartConfiguration<'pie'>['data'] = {
-    labels: [],
-    datasets: [
-      {
-        data: [],
-        backgroundColor: ['#42A5F5', '#66BB6A', '#FFA726', '#AB47BC', '#FF7043'],
-      },
-    ],
-  };
+ getPortefeuilles() {
+    this.operationService.getPorfeuilles().subscribe({     
+      next: (response) => {
+        console.log('Portefeuilles récupérés avec succès :', response);
+        this.portefeuillesList = response;
+        console.log('Portefeuilles:', this.portefeuillesList[2].actifs[0].nom);
+        
+        
+        for (let index = 0; index < this.portefeuillesList.length; index++) {
+          const element = this.portefeuillesList[index];
+          console.log('Portefeuille', index , ' : ', element);
 
+          
+        }
+      },
+      error: (error) => {
+        console.error('Erreur lors de la récupération des portefeuilles :', error);
+      },
+    });
+  }
+  
   afficherAnalyse() {
     this.messageErreur = ''; // Reset
 
@@ -93,6 +114,14 @@ export class CreatePortefeuilleComponent implements OnInit {
 
 
   ajouterActif() {
+    //TODO check pourcentageof all actifs not > 100
+    if (this.actifs.length > 0) {
+      const totalPourcentage  = this.actifs.reduce((acc, actif) => acc + actif.pourcentage, 0);
+      if (totalPourcentage >= 100) {
+        this.messageErreur = 'La somme des pourcentages des actifs ne doit pas dépasser 100%.';
+        return;
+      }
+    } 
     this.actifs.push({ nom: '', categorie: '', type: '', pourcentage: 0, rendement: 0, volatilite: 0 });
   }
 
@@ -163,6 +192,15 @@ export class CreatePortefeuilleComponent implements OnInit {
   }
 
   savePortefeuille(): void {
+    if(this.montantTotal <= 0) {
+      this.messageErreur = 'Veuillez entrer un montant total supérieur à 0.';   
+      return;
+    }
+    if (this.actifs.length === 0) { 
+      this.messageErreur = 'Veuillez ajouter au moins un actif avant de sauvegarder.';
+      return;
+    }
+     
     for (const actif of this.actifs) {
       if (
         !actif.nom?.trim() ||
@@ -172,7 +210,6 @@ export class CreatePortefeuilleComponent implements OnInit {
         actif.volatilite == null || actif.volatilite <= 0
       ) {
         this.messageErreur = 'Veuillez remplir correctement tous les champs obligatoires avant de sauvegarder.';
-
         return;
       }
 
@@ -188,21 +225,15 @@ export class CreatePortefeuilleComponent implements OnInit {
     }
 
     try {
-      const portefeuille = {
+      const portefeuille :Portefeuille = {
         montant_total: this.montantTotal,
-        actifs: this.actifs.map(actif => ({
-          nom: actif.nom,
-          categorie: actif.categorie,
-          type: actif.type,
-          pourcentage: actif.pourcentage,
-          rendement: actif.rendement,
-          volatilite: actif.volatilite,
-        })),
+         actifs: this.actifs 
       };
       console.log('Portefeuille envoyé :', portefeuille); 
-      this.OperationService.savePortefeuille(portefeuille).subscribe({
+      this.operationService.savePortefeuille(portefeuille).subscribe({
         next: (response) => {
           console.log('Portefeuille sauvegardé avec succès :', response);
+          this.portefeuillesList.push(portefeuille); // Ajout du portefeuille à la liste
           this.resetForm();
         },
         error: (error) => {
