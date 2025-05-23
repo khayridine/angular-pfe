@@ -1,60 +1,102 @@
 <app-header />
+
 <div class="container mt-4">
-    
-    <h2 class="mb-4">Optimisation de portefeuille (Markowitz)</h2>
-  
-    <div class="form-group mb-3">
-      <label>Nombre d’actifs :</label>
-      <input type="number" [(ngModel)]="assetsCount" (change)="initMatrix()" min="2" class="form-control w-auto d-inline-block ms-2" />
-    </div>
-  
-    <form (ngSubmit)="submit()">
-      <h4 class="mt-4">Espérances de rendement E(Ri)</h4>
-      <div class="row">
-        <div class="col-md-3 mb-2" *ngFor="let val of expectedReturns; let i = index">
-          <label>Actif {{ i + 1 }}</label>
-          <input type="number" step="0.01" [(ngModel)]="expectedReturns[i]" name="er{{i}}" class="form-control" />
-        </div>
-      </div>
-  
-      <h4 class="mt-4">Matrice de variance-covariance</h4>
-      <div *ngFor="let row of covarianceMatrix; let i = index" class="mb-2">
-        <div class="row">
-          <div class="col" *ngFor="let col of row; let j = index">
-            <input type="number" step="0.01" [(ngModel)]="covarianceMatrix[i][j]" name="cov{{i}}{{j}}" class="form-control" />
-          </div>
-        </div>
-      </div>
-  
-      <div class="form-group mt-3 mb-3">
-        <label>Rentabilité cible E(Rp) :</label>
-        <input type="number" step="0.01" [(ngModel)]="targetReturn" name="target" class="form-control w-auto d-inline-block ms-2" />
-      </div>
-  
-      <button type="submit" class="btn btn-primary mt-3">Calculer la composition optimale</button>
-    </form>
-  
-    <div *ngIf="result" class="mt-4">
-      <h4>Résultat :</h4>
-      <p>Composition optimale (x*) :</p>
-      <ul>
-        <li *ngFor="let w of result.optimal_weights; let i = index">
-          Actif {{ i + 1 }} : {{ w | number:'1.4-4' }}
-        </li>
-      </ul>
-      <p>Variance du portefeuille : {{ result.variance | number:'1.4-4' }}</p>
-    </div>
-  
-    <button (click)="getFrontiere()" class="btn btn-success mt-3">Afficher la frontière efficiente</button>
-  
-    <div style="width: 100%; max-width: 700px; margin-top: 20px">
-      <div *ngIf="isBrowser">
-        <canvas baseChart
-          [data]="chartData"
-          [options]="chartOptions"
-          chartType="line">
-        </canvas>
-      </div>
-    </div>
+  <h2>Optimisation de portefeuille</h2>
+  <p class="text-muted">
+    L’optimisation de portefeuille vous aide à répartir vos actifs efficacement selon votre profil de risque.
+  </p>
+
+  <!-- Choix du nombre d'actifs -->
+  <div class="form-group mb-3">
+    <label>Nombre d’actifs :</label>
+    <input type="number" [(ngModel)]="assetsCount" (change)="initData()" min="2"
+      class="form-control w-auto d-inline-block ms-2" />
   </div>
+
+  <form (ngSubmit)="submit()">
+
+    <!-- Espérances de rendement -->
+    <h5>Espérance de rendement E(Ri)</h5>
+    <div class="row">
+      <div class="col-md-3 mb-2" *ngFor="let val of expectedReturns; let i = index">
+        <label>Actif {{ i + 1 }}</label>
+        <input type="number" step="0.01" [(ngModel)]="expectedReturns[i]" name="er{{i}}" class="form-control" />
+      </div>
+    </div>
+
+    <!-- Matrice de covariance -->
+    <h5 class="mt-4">
+      Matrice de covariance
+      <span matTooltip="Remplissez la corrélation entre les actifs. La diagonale (1) est fixée."
+        matTooltipPosition="above" style="cursor:pointer;">❓</span>
+    </h5>
+    <div class="matrix">
+      <div *ngFor="let row of covarianceMatrix; let i = index" class="row mb-2">
+        <div class="col" *ngFor="let col of row; let j = index">
+          <input type="number" step="0.01" [disabled]="i === j" [(ngModel)]="covarianceMatrix[i][j]"
+            [value]="i === j ? 1 : covarianceMatrix[i][j]" name="cov{{i}}{{j}}" class="form-control" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Rentabilité cible -->
+    <div class="form-group mt-3">
+      <label>Rentabilité cible E(Rp) :</label>
+      <input type="number" step="0.01" [(ngModel)]="targetReturn" name="targetReturn"
+        class="form-control w-auto d-inline-block ms-2" />
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Calculer</button>
+  </form>
+
+  <!-- Résultats -->
+  <div *ngIf="result" class="mt-4">
+    <h5>Résultats :</h5>
+    <p class="alert alert-info">
+      Nous avons ajusté vos allocations pour réduire le risque tout en maintenant un rendement attendu similaire. Cela
+      signifie que votre argent travaille plus efficacement avec une meilleure stabilité.
+    </p>
+
+    <table class="table table-bordered w-auto">
+      <thead>
+        <tr>
+          <th>Actif</th>
+          <th>Allocation actuelle</th>
+          <th>Allocation optimisée</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let w of result.optimal_weights; let i = index">
+          <td>Actif {{ i + 1 }}</td>
+          <td>{{ currentWeights[i] | number:'1.2-2' }}</td> <!-- <- poids actuel -->
+          <td>{{ w | number:'1.2-2' }}</td> <!-- <- poids optimisé -->
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>Rendement attendu optimisé :</strong> {{ result.expected_return | number:'1.4-4' }}</p>
+    <p><strong>Volatilité (écart-type) optimisée :</strong> {{ result.standard_deviation | number:'1.4-4' }}</p>
+  </div>
+
+  <!-- Frontière efficiente -->
+  <button (click)="getFrontiere()" 
+  matTooltip="La frontière efficiente montre les combinaisons optimales risque/rendement." 
+  matTooltipPosition="above" 
+  class="btn btn-success mt-3">
+  Afficher la frontière efficiente
+</button>
+  <div *ngIf="isBrowser" style="max-width: 700px;" class="mt-3">
+    <canvas baseChart [data]="chartData" [options]="chartOptions" chartType="line">
+    </canvas>
+  </div>
+  <div *ngIf="result" class="mt-3">
+  <button class="btn btn-primary me-2" (click)="applyOptimization()">Appliquer l’optimisation</button>
   
+  <div class="form-group mt-3" >
+  <label for="draftName">Nom du brouillon :</label>
+  <input type="text" class="form-control w-auto d-inline-block ms-2" id="draftName"
+    [(ngModel)]="draftName" name="draftName" placeholder="Ex: Portefeuille équilibré" />
+</div>
+  <button class="btn btn-secondary" (click)="saveDraft()">Enregistrer comme brouillon</button>
+</div>
+</div>
