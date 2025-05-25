@@ -3,10 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '@app/components/header/header.component';
-import { Portefeuille } from '@app/model/portefeuille';
+import { Actif, Portefeuille } from '@app/model/portefeuille';
+
 import { ChartConfiguration } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
-import { Actif } from 'src/app/model/actif';
+
 import { OperationService } from 'src/app/services/operation.service';
 
 
@@ -56,9 +57,9 @@ export class CreatePortefeuilleComponent implements OnInit {
   }
 
  getPortefeuilles() {
-    this.operationService.getPorfeuilles().subscribe({     
+    this.operationService.getPortefeuilles().subscribe({     
       next: (response) => {
-        console.log('Portefeuilles récupérés avec succès :', response);
+        
         this.portefeuillesList = response;
         console.log('Portefeuilles:', this.portefeuillesList[2].actifs[0].nom);
         
@@ -244,6 +245,36 @@ export class CreatePortefeuilleComponent implements OnInit {
       console.error('Erreur lors de la sauvegarde du portefeuille :', error);
     }
   }
+  calculerRisque(): number {
+  let variance = 0;
+  for (const actif of this.actifs) {
+    const poids = actif.pourcentage / 100;
+    variance += Math.pow(poids, 2) * Math.pow(actif.volatilite / 100, 2);
+  }
+  const volatilite = Math.sqrt(variance) * 100;
+  return parseFloat(volatilite.toFixed(2));
+}
+calculerSharpe(rendement: number, volatilite: number, tauxSansRisque: number = 7.5): number {
+  const sharpe = (rendement - tauxSansRisque) / volatilite;
+  return parseFloat(sharpe.toFixed(2));
+}
+calculerRendementFrom(pf: Portefeuille): number {
+  let total = 0;
+  for (let actif of pf.actifs) {
+    total += (actif.pourcentage / 100) * actif.rendement;
+  }
+  return parseFloat(total.toFixed(2));
+}
+
+calculerRisqueFrom(pf: Portefeuille): number {
+  let variance = 0;
+  for (let actif of pf.actifs) {
+    const poids = actif.pourcentage / 100;
+    variance += Math.pow(poids, 2) * Math.pow(actif.volatilite / 100, 2);
+  }
+  return parseFloat((Math.sqrt(variance) * 100).toFixed(2));
+}
+
 
   
 }

@@ -103,6 +103,30 @@
     <button class="btn btn-secondary" (click)="resetForm()">Réinitialiser</button>
     <button class="btn btn-outline-dark">Comparer avec un autre portefeuille</button>
   </div>
+  <table class="table mt-5" *ngIf="portefeuillesList.length > 0">
+  <thead>
+    <tr>
+      <th>Nom</th>
+      <th>Montant</th>
+      <th>Nombre d’actifs</th>
+      <th>Rendement (%)</th>
+      <th>Risque (%)</th>
+      <th>Ratio de Sharpe</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let pf of portefeuillesList">
+      <td>Portefeuille {{ portefeuillesList.indexOf(pf) + 1 }}</td>
+      <td>{{ pf.montant_total }}</td>
+      <td>{{ pf.actifs.length }}</td>
+      <td>{{ calculerRendementFrom(pf) }}</td>
+      <td>{{ calculerRisqueFrom(pf) }}</td>
+      <td>{{ calculerSharpe(calculerRendementFrom(pf), calculerRisqueFrom(pf)) }}</td>
+    </tr>
+  </tbody>
+</table>
+
+
 </div>
 
 

@@ -115,7 +115,7 @@ export class OptimisationComponent {
     optimal_weights: this.result.optimal_weights
   };
 
-  console.log("Payload envoyé :", payload); // pour vérifier
+  
 
   this.operationService.applyOptimization(payload).subscribe({
     next: () => alert('Optimisation appliquée avec succès.'),

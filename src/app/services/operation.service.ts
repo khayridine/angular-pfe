@@ -35,7 +35,7 @@ export class OperationService {
     return this.http.post<any>(this.apiUrl+'portefeuille/save-portefeuille', portefeuille);
   } 
   
-  getPorfeuilles(): Observable<Portefeuille[]> {
+  getPortefeuilles(): Observable<Portefeuille[]> {
     return this.http.get<Portefeuille[]>(this.apiUrl+'portefeuille/portefeuilles');
   }
   getEfficientFrontier(data: EfficientFrontierInput): Observable<EfficientFrontierResponse> {
