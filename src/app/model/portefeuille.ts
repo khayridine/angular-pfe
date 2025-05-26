@@ -3,6 +3,7 @@
 export interface Portefeuille{   
     montant_total: number;
     actifs: Actif[];
+    
 }
 export interface Actif {
 

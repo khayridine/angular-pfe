@@ -8,7 +8,7 @@ import { ActionsComponent } from './pages/actions/actions.component';
 import { FormulaireComponent } from './pages/calculateur/formulaire.component'
 import { OptimisationComponent } from './pages/optimisation/optimisation.component';
 import { CreatePortefeuilleComponent } from './pages/create-portefeuille/create-portefeuille.component'
-
+import { ComparerPortefeuillesComponent } from './pages/comparer-portefeuilles/comparer-portefeuilles.component';
 export const routes: Routes = [
     {path:"", component:LoginComponent,},
     {path:"signup", component:SignupComponent},
@@ -19,6 +19,7 @@ export const routes: Routes = [
     { path: 'formulaire', component: FormulaireComponent},
     {path: 'optimisation', component: OptimisationComponent},
     { path: 'create-portefeuille', component: CreatePortefeuilleComponent },
+    {path: 'comparer-portefeuilles',component: ComparerPortefeuillesComponent},
 
 
    

@@ -3,11 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '@app/components/header/header.component';
-import { Actif, Portefeuille } from '@app/model/portefeuille';
-
+import { Portefeuille } from '@app/model/portefeuille';
 import { ChartConfiguration } from 'chart.js';
 import { NgChartsModule } from 'ng2-charts';
-
+import { Actif } from 'src/app/model/portefeuille';
 import { OperationService } from 'src/app/services/operation.service';
 
 
@@ -59,7 +58,7 @@ export class CreatePortefeuilleComponent implements OnInit {
  getPortefeuilles() {
     this.operationService.getPortefeuilles().subscribe({     
       next: (response) => {
-        
+        console.log('Portefeuilles récupérés avec succès :', response);
         this.portefeuillesList = response;
         console.log('Portefeuilles:', this.portefeuillesList[2].actifs[0].nom);
         
@@ -157,40 +156,40 @@ export class CreatePortefeuilleComponent implements OnInit {
     this.messageRendementTexte = message.texte;
   }
 
-  getMessageRendement(r: number): { titre: string; texte: string } {
-    const rendement = r.toFixed(2);
-    if (r < -5) {
-      return {
-        titre: '❌ Alerte : Perte importante attendue',
-        texte: `Ton rendement total estimé annuel pour ce portefeuille est ${rendement} %. Cela signifie que ton portefeuille est trop exposé à des actifs en perte. Un rééquilibrage rapide est recommandé pour limiter les risques de perte de capital.`,
-      };
-    } else if (r >= -5 && r < 0) {
-      return {
-        titre: '⚠️ Attention : Performance négative',
-        texte: `Ton rendement total estimé annuel pour ce portefeuille est ${rendement} %. Cela signifie que ton capital pourrait légèrement diminuer au fil du temps. Il serait utile d’analyser les actifs sous-performants et de rééquilibrer ton portefeuille pour viser un rendement positif plus stable.`,
-      };
-    } else if (r >= 0 && r < 4) {
-      return {
-        titre: '✅ Stabilité : Faible croissance',
-        texte: `Ton rendement total estimé annuel pour ce portefeuille est ${rendement} %. Cela signifie que ton portefeuille est relativement stable, avec une faible croissance. Il protège ton capital contre l’inflation, mais il pourrait être optimisé pour générer plus de valeur à long terme.`,
-      };
-    } else if (r >= 4 && r < 8) {
-      return {
-        titre: '✨ Équilibre : Bonne performance maîtrisée',
-        texte: `Ton rendement total estimé annuel pour ce portefeuille est ${rendement} %. Cela signifie que ton portefeuille offre un bon équilibre entre performance et stabilité. Il est adapté à un profil équilibré, avec une croissance progressive et un risque modéré.`,
-      };
-    } else if (r >= 8 && r < 15) {
-      return {
-        titre: '💰 Dynamique : Forte croissance attendue',
-        texte: `Ton rendement total estimé annuel pour ce portefeuille est ${rendement} %. Cela signifie que tu vises une croissance importante de ton capital, avec une prise de risque modérée à élevée. Ce type de portefeuille est adapté à un investisseur dynamique, prêt à accepter des fluctuations à court terme.`,
-      };
-    } else {
-      return {
-        titre: '⚡️ Spéculatif : Objectif ambitieux, vigilance requise',
-        texte: `Ton rendement total estimé annuel pour ce portefeuille est ${rendement} %. Cela signifie que tu poursuis un objectif de rendement très ambitieux. Ce niveau élevé implique souvent une forte volatilité et un risque important : il est essentiel de bien surveiller les performances, de rester informé sur les marchés, et de diversifier pour limiter les pertes potentielles.`,
-      };
-    }
+ getMessageRendement(r: number): { titre: string; texte: string } {
+  const rendement = r.toFixed(2);
+  if (r < -5) {
+    return {
+      titre: '❌ Alerte : Perte importante attendue',
+      texte: `Ton rendement total estimé annuel pour ce portefeuille est ${rendement} %. Cela signifie que ton portefeuille est trop exposé à des actifs en perte. Un rééquilibrage rapide est recommandé pour limiter les risques de perte de capital.`,
+    };
+  } else if (r >= -5 && r < 0) {
+    return {
+      titre: '⚠️ Attention : Performance négative',
+      texte: `Ton rendement total estimé annuel pour ce portefeuille est ${rendement} %. Cela signifie que ton capital pourrait légèrement diminuer au fil du temps. Il serait utile d’analyser les actifs sous-performants et de rééquilibrer ton portefeuille pour viser un rendement positif plus stable.`,
+    };
+  } else if (r >= 0 && r < 4) {
+    return {
+      titre: '✅ Stabilité : Faible croissance',
+      texte: `Ton rendement total estimé annuel pour ce portefeuille est ${rendement} %. Cela signifie que ton portefeuille est relativement stable, avec une faible croissance. Il protège ton capital contre l’inflation, mais il pourrait être optimisé pour générer plus de valeur à long terme.`,
+    };
+  } else if (r >= 4 && r < 8) {
+    return {
+      titre: '✨ Équilibre : Bonne performance maîtrisée',
+      texte: `Ton rendement total estimé annuel pour ce portefeuille est ${rendement} %. Cela signifie que ton portefeuille offre un bon équilibre entre performance et stabilité. Il est adapté à un profil équilibré, avec une croissance progressive et un risque modéré.`,
+    };
+  } else if (r >= 8 && r < 15) {
+    return {
+      titre: '💰 Dynamique : Forte croissance attendue',
+      texte: `Ton rendement total estimé annuel pour ce portefeuille est ${rendement} %. Cela signifie que tu vises une croissance importante de ton capital, avec une prise de risque modérée à élevée. Ce type de portefeuille est adapté à un investisseur dynamique, prêt à accepter des fluctuations à court terme.`,
+    };
+  } else {
+    return {
+      titre: '⚡️ Spéculatif : Objectif ambitieux, vigilance requise',
+      texte: `Ton rendement total estimé annuel pour ce portefeuille est ${rendement} %. Cela signifie que tu poursuis un objectif de rendement très ambitieux. Ce niveau élevé implique souvent une forte volatilité et un risque important : il est essentiel de bien surveiller les performances, de rester informé sur les marchés, et de diversifier pour limiter les pertes potentielles.`,
+    };
   }
+}
 
   savePortefeuille(): void {
     if(this.montantTotal <= 0) {
@@ -245,36 +244,8 @@ export class CreatePortefeuilleComponent implements OnInit {
       console.error('Erreur lors de la sauvegarde du portefeuille :', error);
     }
   }
-  calculerRisque(): number {
-  let variance = 0;
-  for (const actif of this.actifs) {
-    const poids = actif.pourcentage / 100;
-    variance += Math.pow(poids, 2) * Math.pow(actif.volatilite / 100, 2);
-  }
-  const volatilite = Math.sqrt(variance) * 100;
-  return parseFloat(volatilite.toFixed(2));
+allerComparer(): void {
+  this.router.navigate(['/comparer-portefeuilles']);
 }
-calculerSharpe(rendement: number, volatilite: number, tauxSansRisque: number = 7.5): number {
-  const sharpe = (rendement - tauxSansRisque) / volatilite;
-  return parseFloat(sharpe.toFixed(2));
-}
-calculerRendementFrom(pf: Portefeuille): number {
-  let total = 0;
-  for (let actif of pf.actifs) {
-    total += (actif.pourcentage / 100) * actif.rendement;
-  }
-  return parseFloat(total.toFixed(2));
-}
-
-calculerRisqueFrom(pf: Portefeuille): number {
-  let variance = 0;
-  for (let actif of pf.actifs) {
-    const poids = actif.pourcentage / 100;
-    variance += Math.pow(poids, 2) * Math.pow(actif.volatilite / 100, 2);
-  }
-  return parseFloat((Math.sqrt(variance) * 100).toFixed(2));
-}
-
-
   
 }
