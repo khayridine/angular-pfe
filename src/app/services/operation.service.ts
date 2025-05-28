@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Portefeuille } from '../model/portefeuille';
+import { Actif, Portefeuille } from '../model/portefeuille';
+
 import { EfficientFrontierInput } from '../model/frontiereInput';
 import { EfficientFrontierResponse } from '../model/frontierResponse';
+import { OptimisationResponse } from '../model/optimisation';
 export interface Operation {
   id: number;
   type: string;
@@ -13,6 +15,10 @@ export interface Operation {
   taxe: number;
   frais: number;
 }
+
+
+
+
 
 
 
@@ -66,6 +72,19 @@ getNombreActifsParPortefeuille(): Observable<any[]> {
 comparerPortefeuilles(portefeuilleIds: number[], tauxSansRisque: number = 7.5): Observable<any> {
   return this.http.post<any>(this.apiUrl + 'portefeuille/comparer?taux_sans_risque=' + tauxSansRisque, portefeuilleIds);
 }  
+
+
+getActifs(portefeuilleId: number): Observable<Actif[]> {
+    return this.http.get<Actif[]>(`${this.apiUrl}portefeuilles/${portefeuilleId}/actifs`);
+  }
+
+optimiserPortefeuille(portefeuilleId: number, matrice: number[][]): Observable<OptimisationResponse> {
+    return this.http.post<OptimisationResponse>(`${this.apiUrl}optimiser-portefeuille`, {
+      portefeuille_id: portefeuilleId,
+      covariance_matrix: matrice 
+    });
+  }
+
 }
 
 

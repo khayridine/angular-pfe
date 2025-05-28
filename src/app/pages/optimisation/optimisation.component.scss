@@ -1,5 +1,38 @@
-span[matTooltip] {
-  color: #0d6efd; /* bleu bootstrap */
-  font-weight: bold;
-  user-select: none;
+.container {
+  background: linear-gradient(to bottom right, #ffffff, #e7f1ff);
+  padding: 2rem;
+  border-radius: 1rem;
+  max-width: 900px;
+  margin: auto;
+}
+
+select, input[type="number"] {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.375rem;
+}
+
+button {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #1e40af;
+}
+
+.tooltip[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  background: #000;
+  color: #fff;
+  padding: 0.3rem;
+  font-size: 0.75rem;
+  border-radius: 0.25rem;
+  white-space: nowrap;
 }

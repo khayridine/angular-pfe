@@ -1,8 +1,12 @@
 
 
-export interface Portefeuille{   
+
+export interface Portefeuille{ 
+    
     montant_total: number;
     actifs: Actif[];
+    id?: number;
+    nom?: string;
     
 }
 export interface Actif {
@@ -14,4 +18,6 @@ export interface Actif {
     rendement: number;
     volatilite: number;
   }
-  
+
+
+ 

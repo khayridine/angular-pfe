@@ -1,149 +1,246 @@
-import { Component, Inject } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { NgChartsModule } from 'ng2-charts';
-import { ChartConfiguration } from 'chart.js';
-import { PLATFORM_ID } from '@angular/core';
-import { HeaderComponent } from '@app/components/header/header.component';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, Validators, FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { Actif, Portefeuille } from '@app/model/portefeuille';
+import { OptimisationResponse } from '@app/model/optimisation';
 import { OperationService } from '@app/services/operation.service';
-
+import { CommonModule } from '@angular/common';
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
 
 @Component({
-  selector: 'app-optimisation',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule, NgChartsModule, HeaderComponent, MatTooltipModule],
+  selector: 'app-portefeuille-optimisation',
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './optimisation.component.html',
-  styleUrls: ['./optimisation.component.scss']
+  styleUrl: './optimisation.component.scss'
 })
+export class PortefeuilleOptimisationComponent implements OnInit {
 
+  portefeuilles: Portefeuille[] = [];
+  actifs: Actif[] = [];
+  selectedPortefeuilleId: number | null = null;
+  matriceForm: FormGroup;
+  loadingActifs = false;
+  loadingOptimisation = false;
+  erreurMessage = '';
+  optimisationResult: OptimisationResponse | null = null;
+  chartInstance: Chart | null = null;
 
-
-export class OptimisationComponent {
-   isBrowser = true;
-  assetsCount = 3;
-  expectedReturns: number[] = [];
-  covarianceMatrix: number[][] = [];
-  targetReturn = 0;
-  currentWeights: number[] = [0.3, 0.4, 0.3];
-
-  
-  result: any = null;
-  draftName: string = '';
-
- 
+  tooltipCovariance = `Comment remplir la matrice ? ...`;
 
   constructor(
     private operationService: OperationService,
-    @Inject(PLATFORM_ID) private platformId: Object ,  
+    private fb: FormBuilder
   ) {
-    this.isBrowser = isPlatformBrowser(this.platformId);
-    this.initData();
-  }
-  initData() {
-  this.expectedReturns = Array(this.assetsCount).fill(0);
-  this.currentWeights = Array(this.assetsCount).fill(1 / this.assetsCount);
-  this.covarianceMatrix = Array.from({ length: this.assetsCount }, (_, i) =>
-    Array.from({ length: this.assetsCount }, (_, j) => (i === j ? 1 : 0))
-  );
-}
-
-  submit() {
-    const payload = {
-      expected_returns: this.expectedReturns,
-      cov_matrix: this.covarianceMatrix,
-      target_return: this.targetReturn,
-      current_weights: this.currentWeights
-    };
-
-    this.operationService.submitOptimisation(payload).subscribe({
-      next: (res) => {
-        this.result = res;
-        if (res.returns && res.risks) {
-          this.chartData.labels = res.returns.map((r: number) => r.toFixed(3));
-          this.chartData.datasets[0].data = res.risks.map((r: number) => r.toFixed(3));
-        }
-        console.log('Résultat optimisation reçu:', this.result);
-      },
-      error: (err) => console.error('Erreur HTTP:', err)
-      
+    this.matriceForm = this.fb.group({
+      covarianceMatrix: this.fb.array([])
     });
   }
 
-  getFrontiere() {
-    const payload = {
-      expected_returns: this.expectedReturns,
-      cov_matrix: this.covarianceMatrix,
-      target_return: this.targetReturn,
-      current_weights: this.currentWeights
-    };
-
-    this.operationService.getEfficientFrontier(payload).subscribe({
-      next: (res) => {
-        this.chartData.labels = res.risks;
-        this.chartData.datasets[0].data = res.returns;
-      },
-      error: (err) => console.error('Erreur HTTP (frontière):', err)
+  ngOnInit(): void {
+    this.operationService.getPortefeuilles().subscribe(data => {
+      this.portefeuilles = data;
     });
-    
   }
 
-  chartData: ChartConfiguration<'line'>['data'] = {
-    labels: [],
-    datasets: [{
-      data: [],
-      label: 'Frontière efficiente',
-      borderColor: 'blue',
-      backgroundColor: 'rgba(168, 67, 226, 0.2)',
-      pointRadius: 2,
-      fill: false,
-    }]
-  };
-
-  chartOptions: ChartConfiguration<'line'>['options'] = {
-    responsive: true,
-    scales: {
-      x: { title: { display: true, text: 'Risque (σ)' } },
-      y: { title: { display: true, text: 'Rentabilité attendue' } }
+  onPortefeuilleChange() {
+    if (this.selectedPortefeuilleId !== null) {
+      this.loadingActifs = true;
+      this.optimisationResult = null;
+      this.erreurMessage = '';
+      this.operationService.getActifs(this.selectedPortefeuilleId).subscribe(actifs => {
+        this.actifs = actifs;
+        this.initMatriceCovariance();
+        this.loadingActifs = false;
+      }, err => {
+        this.loadingActifs = false;
+        this.erreurMessage = 'Erreur lors du chargement des actifs.';
+      });
+    } else {
+      this.actifs = [];
+      this.resetMatriceForm();
     }
-  };
-
-  
-  applyOptimization() {
-  const payload = {
-    optimal_weights: this.result.optimal_weights
-  };
-
-  
-
-  this.operationService.applyOptimization(payload).subscribe({
-    next: () => alert('Optimisation appliquée avec succès.'),
-    error: (err) => console.error('Erreur application optimisation:', err)
-  });
-}
-
-saveDraft() {
-  if (!this.draftName) {
-    alert("Veuillez entrer un nom pour le brouillon.");
-    return;
   }
 
-  const draftPayload = {
-    expected_returns: this.expectedReturns,
-    cov_matrix: this.covarianceMatrix,
-    target_return: this.targetReturn,
-    current_weights: this.currentWeights,
-    optimal_weights: this.result?.optimal_weights || [],
-    draft_name: this.draftName  // 👈 Nom du brouillon
-  };
+  initMatriceCovariance() {
+    this.resetMatriceForm();
+    const n = this.actifs.length;
+    const matriceFA = this.matriceForm.get('covarianceMatrix') as FormArray;
+    for (let i = 0; i < n; i++) {
+      const rowFA = this.fb.array([]);
+      for (let j = 0; j < n; j++) {
+        const value = (i === j) ? 1 : 0;
+        rowFA.push(this.fb.control({ value, disabled: i === j }, [
+          Validators.required,
+          Validators.min(-1),
+          Validators.max(1)
+        ]));
+      }
+      matriceFA.push(rowFA);
+    }
+  }
 
-  this.operationService.saveDraft(draftPayload).subscribe({
-    next: () => alert('Brouillon sauvegardé.'),
-    error: (err) => console.error('Erreur sauvegarde brouillon:', err)
-    
-  });
-}
+  resetMatriceForm() {
+    const matriceFA = this.matriceForm.get('covarianceMatrix') as FormArray;
+    while (matriceFA.length !== 0) {
+      matriceFA.removeAt(0);
+    }
+  }
 
+  getRowControls(rowIndex: number) {
+    const matriceFA = this.matriceForm.get('covarianceMatrix') as FormArray;
+    return (matriceFA.at(rowIndex) as FormArray).controls;
+  }
 
+  onCovarianceChange(i: number, j: number) {
+    const matriceFA = this.matriceForm.get('covarianceMatrix') as FormArray;
+    if (i !== j) {
+      const val = matriceFA.at(i).get(j.toString())?.value;
+      const symControl = matriceFA.at(j).get(i.toString());
+      if (symControl && symControl.value !== val) {
+        symControl.setValue(val, { emitEvent: false });
+      }
+    }
+  }
+
+  getMatriceValeurs(): number[][] {
+    const matriceFA = this.matriceForm.get('covarianceMatrix') as FormArray;
+    return matriceFA.controls.map(rowFA => {
+      return (rowFA as FormArray).controls.map(ctrl => Number(ctrl.value));
+    });
+  }
+
+  lancerOptimisation() {
+    if (!this.selectedPortefeuilleId) return;
+    this.erreurMessage = '';
+    this.optimisationResult = null;
+
+    const matrice = this.getMatriceValeurs();
+    if (!this.validerMatrice(matrice)) return;
+
+    this.loadingOptimisation = true;
+    this.operationService.optimiserPortefeuille(this.selectedPortefeuilleId, matrice).subscribe(
+      result => {
+        this.optimisationResult = result;
+        this.loadingOptimisation = false;
+        this.afficherGraphique(); // déplacer ici après réception du résultat
+      },
+      err => {
+        this.erreurMessage = err.error?.detail || 'Erreur lors de l’optimisation.';
+        this.loadingOptimisation = false;
+      }
+    );
+  }
+
+  validerMatrice(matrice: number[][]): boolean {
+    const n = matrice.length;
+    for (let i = 0; i < n; i++) {
+      if (matrice[i].length !== n) {
+        this.erreurMessage = "La matrice doit être carrée";
+        return false;
+      }
+      for (let j = 0; j < n; j++) {
+        const val = matrice[i][j];
+        if (val < -1 || val > 1) {
+          this.erreurMessage = `Valeur hors limites (-1 à 1) en position [${i + 1},${j + 1}]`;
+          return false;
+        }
+        if (i === j && val !== 1) {
+          this.erreurMessage = `La diagonale doit être égale à 1 en position [${i + 1},${j + 1}]`;
+          return false;
+        }
+        if (i > j && val !== matrice[j][i]) {
+          this.erreurMessage = `La matrice doit être symétrique : [${i + 1},${j + 1}] ≠ [${j + 1},${i + 1}]`;
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  afficherGraphique(): void {
+    const ctx = document.getElementById('frontiereChart') as HTMLCanvasElement;
+
+    if (this.chartInstance) {
+      this.chartInstance.destroy();
+    }
+
+    const dataPoints = this.optimisationResult?.frontiere_efficiente?.map((point: any) => ({
+      x: point.risque * 100,
+      y: point.rendement * 100
+    })) || [];
+
+    this.chartInstance = new Chart(ctx, {
+      type: 'scatter',
+      data: {
+        datasets: [
+          {
+            label: 'Frontière efficiente',
+            data: dataPoints,
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+            pointBackgroundColor: '#2563eb',
+            pointRadius: 5,
+            showLine: true,
+            tension: 0.3,
+            fill: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true,
+            labels: {
+              color: '#1f2937',
+              font: {
+                size: 14
+              }
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: (context) => {
+                const raw = context.raw as { x: number, y: number };
+                const x = raw.x.toFixed(2);
+                const y = raw.y.toFixed(2);
+                return ` Risque: ${x}%, Rendement: ${y}%`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Risque (%)',
+              color: '#111827'
+            },
+            ticks: {
+              color: '#374151'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Rendement (%)',
+              color: '#111827'
+            },
+            ticks: {
+              color: '#374151'
+            }
+          }
+        }
+      }
+    });
+  }
+
+  getCovarianceRow(i: number): FormGroup {
+    return this.matriceForm.get('covarianceMatrix')?.get(i.toString()) as FormGroup;
+  }
+
+  getRowControl(i: number, j: number): FormControl {
+    return this.matriceForm.get('covarianceMatrix')?.get(i.toString())?.get(j.toString()) as FormControl;
+  }
 }
