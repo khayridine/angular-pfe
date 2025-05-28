@@ -29,6 +29,7 @@
     "express": "^4.18.2",
     "font-awesome": "^4.7.0",
     "ng2-charts": "^4.1.1",
+    "ngx-chartjs": "^0.0.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "util": "^0.12.5",

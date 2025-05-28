@@ -1,113 +1,106 @@
 <div class="p-6 max-w-5xl mx-auto bg-gradient-to-br from-white via-gray-50 to-blue-100 rounded-xl shadow-lg">
-  <h2 class="text-2xl font-bold text-blue-800 mb-4">Optimisation de Portefeuille</h2>
+    <h2 class="text-2xl font-bold text-blue-800 mb-4">Optimisation de Portefeuille</h2>
 
-  <label for="portefeuilleSelect" class="block text-gray-700 font-medium mb-2">Choisir un portefeuille :</label>
-  <select
-    id="portefeuilleSelect"
-    class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
-    [(ngModel)]="selectedPortefeuilleId"
-    (change)="onPortefeuilleChange()"
-  >
-    <option [value]="null">-- Sélectionner --</option>
-    <option *ngFor="let p of portefeuilles" [value]="p.id">{{ p.nom }}</option>
-  </select>
+    <label for="portefeuilleSelect" class="block text-gray-700 font-medium mb-2">Choisir un portefeuille :</label>
+    <select id="portefeuilleSelect"
+        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+        [(ngModel)]="selectedPortefeuilleId" (change)="onPortefeuilleChange()">
+        <option [value]="null">-- Sélectionner --</option>
+        <option *ngFor="let p of portefeuilles" [value]="p.id">{{ p.nom }}</option>
+    </select>
 
-  <div *ngIf="loadingActifs" class="text-blue-600 mb-4">Chargement des actifs...</div>
+    <div *ngIf="loadingActifs" class="text-blue-600 mb-4">Chargement des actifs...</div>
 
-  <div *ngIf="actifs.length > 0">
-    <h3 class="text-xl font-semibold text-gray-800 mb-2">Actifs dans le portefeuille</h3>
-    <ul class="mb-6 space-y-1">
-      <li *ngFor="let actif of actifs" class="text-gray-700">
-        <strong>{{ actif.nom }}</strong> — Rendement: {{ actif.rendement }}%, Volatilité: {{ actif.volatilite }}%
-      </li>
-    </ul>
+    <div *ngIf="actifs.length > 0">
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">Actifs dans le portefeuille</h3>
+        <ul class="mb-6 space-y-1">
+            <li *ngFor="let actif of actifs" class="text-gray-700">
+                <strong>{{ actif.nom }}</strong> — Rendement: {{ actif.rendement }}%, Volatilité: {{ actif.volatilite
+                }}%
+            </li>
+        </ul>
 
-    <h3 class="text-xl font-semibold text-gray-800 mb-2 flex items-center">
-      Matrice de covariance
-      <span
-        class="ml-2 text-sm text-gray-500 cursor-help"
-        title="Saisissez les covariances entre les actifs pour l'optimisation."
-        >ℹ️</span
-      >
-    </h3>
+        <h3 class="text-xl font-semibold text-gray-800 mb-2 flex items-center">
+            Matrice de covariance
+            <div title="Comment remplir la matrice ? 
+Pour chaque paire d’actifs, estimez à quel point ils évoluent ensemble dans le temps : 
+- Actifs très similaires → entre +0,7 et +0,9
+- Actifs assez différents → entre 0,0 et +0,3
+- Actifs opposés → entre –0,3 et –0,6">
+                ℹ️ Comment remplir la matrice ?
+            </div>
+             </h3>
 
-    <div class="overflow-auto bg-white rounded shadow mb-6 p-2">
-      <table class="min-w-full table-auto border text-sm text-center">
-        <thead class="bg-blue-100 text-gray-800">
-          <tr>
-            <th></th>
-            <th *ngFor="let actif of actifs">{{ actif.nom }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr [formGroup]="getCovarianceRow(i)" *ngFor="let actif of actifs; let i = index">
-            <td class="font-medium text-gray-700">{{ actifs[i].nom }}</td>
-            <td *ngFor="let col of actifs; let j = index">
-              <input
-                type="number"
-                step="0.01"
-                min="-1"
-                max="1"
-                [formControl]="getRowControl(i, j)"
-                class="w-20 p-1 border border-gray-300 rounded text-right"
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        <div class="overflow-auto bg-white rounded shadow mb-6 p-2">
+            <table class="min-w-full table-auto border text-sm text-center">
+                <thead class="bg-blue-100 text-gray-800">
+                    <tr>
+                        <th></th>
+                        <th *ngFor="let actif of actifs">{{ actif.nom }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let actif of actifs; let i = index">
+                        <td class="font-medium text-gray-700">{{ actifs[i].nom }}</td>
+                        <td *ngFor="let col of actifs; let j = index">
+                            <input type="number" step="0.01" min="-1" max="1" [formControl]="getRowControls(i)[j]"
+                                (change)="onCovarianceChange(i, j)"
+                                class="w-20 p-1 border border-gray-300 rounded text-right" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <button (click)="lancerOptimisation()" [disabled]="loadingOptimisation"
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-xl shadow-lg transition duration-300 ease-in-out">
+            Optimiser
+        </button>
+
+        <div *ngIf="loadingOptimisation" class="mt-4 text-blue-700">Calcul en cours...</div>
+
+        <div *ngIf="erreurMessage" class="mt-4 text-red-600">{{ erreurMessage }}</div>
+
+        <div *ngIf="optimisationResult"
+            class="mt-6 bg-gradient-to-br from-white via-gray-50 to-green-50 p-6 rounded-xl shadow border border-green-200">
+
+            <h3 class="text-xl font-bold text-green-700 mb-2">Résultats de l'optimisation</h3>
+            <p class="text-gray-700 mb-4">{{ optimisationResult.message }}</p>
+
+            <table class="w-full table-auto border text-sm text-center rounded overflow-hidden shadow">
+
+                <thead class="bg-blue-50 text-gray-800 font-medium">
+
+                    <tr>
+                        <th>Actif</th>
+                        <th>Allocation actuelle</th>
+                        <th>Allocation optimisée</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let actif of actifs; let i = index">
+                        <td class="py-1">{{ actif.nom }}</td>
+                        <td>{{ (optimisationResult.allocation_actuelle[i] * 100) | number:'1.2-2' }}%</td>
+                        <td>{{ (optimisationResult.allocation_optimisee[i] * 100) | number:'1.2-2' }}%</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="mt-4 text-blue-900 bg-blue-50 border border-blue-200 p-4 rounded shadow-sm">
+                Nous avons ajusté vos allocations pour réduire le risque tout en maintenant
+                un rendement attendu similaire. Cela signifie que votre argent travaille plus
+                efficacement avec une meilleure stabilité.
+            </p>
+
+            <h4 class="text-lg font-semibold mb-1">Frontière efficiente</h4>
+            <small class="text-gray-500"
+                title="La frontière efficiente montre les combinaisons optimales entre risque et rendement avec vos actifs.">
+            </small>
+
+            <div class="bg-white p-4 mt-2 rounded-xl shadow border">
+
+                <canvas #frontiereChartCanvas class="w-full max-h-96" height="300"></canvas>
+            </div>
+
+        </div>
     </div>
-
-    <button
-  (click)="lancerOptimisation()"
-  [disabled]="loadingOptimisation"
-  class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-xl shadow-lg transition duration-300 ease-in-out"
->
-  Optimiser
-</button>
-
-    <div *ngIf="loadingOptimisation" class="mt-4 text-blue-700">Calcul en cours...</div>
-
-    <div *ngIf="erreurMessage" class="mt-4 text-red-600">{{ erreurMessage }}</div>
-
-    <div *ngIf="optimisationResult" class="mt-6 bg-gradient-to-br from-white via-gray-50 to-green-50 p-6 rounded-xl shadow border border-green-200">
-
-      <h3 class="text-xl font-bold text-green-700 mb-2">Résultats de l'optimisation</h3>
-      <p class="text-gray-700 mb-4">{{ optimisationResult.message }}</p>
-
-      <table class="w-full table-auto border text-sm text-center rounded overflow-hidden shadow">
-
-        <thead class="bg-blue-50 text-gray-800 font-medium">
-
-          <tr>
-            <th>Actif</th>
-            <th>Allocation actuelle</th>
-            <th>Allocation optimisée</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let actif of actifs; let i = index">
-            <td class="py-1">{{ actif.nom }}</td>
-            <td>{{ (optimisationResult.allocation_actuelle[i] * 100) | number:'1.2-2' }}%</td>
-            <td>{{ (optimisationResult.allocation_optimisee[i] * 100) | number:'1.2-2' }}%</td>
-          </tr>
-        </tbody>
-      </table>
-      <p class="mt-4 text-blue-900 bg-blue-50 border border-blue-200 p-4 rounded shadow-sm">
-  Nous avons ajusté vos allocations pour réduire le risque tout en maintenant
-  un rendement attendu similaire. Cela signifie que votre argent travaille plus
-  efficacement avec une meilleure stabilité.
-</p>
-
-      <h4 class="text-lg font-semibold mb-1">Frontière efficiente</h4>
-      <small
-        class="text-gray-500"
-        title="La frontière efficiente montre les combinaisons optimales entre risque et rendement avec vos actifs."
-      >
-        (Passez la souris ici pour plus d'infos)
-      </small>
-      <div class="bg-white p-4 mt-2 rounded-xl shadow border">
-  <canvas id="frontiereChart" class="w-full max-h-96" height="300"></canvas>
-</div>
-    </div>
-  </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators, FormsModule, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { Actif, Portefeuille } from '@app/model/portefeuille';
 import { OptimisationResponse } from '@app/model/optimisation';
@@ -15,6 +15,8 @@ Chart.register(...registerables);
   styleUrl: './optimisation.component.scss'
 })
 export class PortefeuilleOptimisationComponent implements OnInit {
+   @ViewChild('frontiereChartCanvas', { static: false }) chartRef!: ElementRef<HTMLCanvasElement>;
+  chartInstance: Chart | null = null;
 
   portefeuilles: Portefeuille[] = [];
   actifs: Actif[] = [];
@@ -24,7 +26,7 @@ export class PortefeuilleOptimisationComponent implements OnInit {
   loadingOptimisation = false;
   erreurMessage = '';
   optimisationResult: OptimisationResponse | null = null;
-  chartInstance: Chart | null = null;
+
 
   tooltipCovariance = `Comment remplir la matrice ? ...`;
 
@@ -87,11 +89,11 @@ export class PortefeuilleOptimisationComponent implements OnInit {
     }
   }
 
-  getRowControls(rowIndex: number) {
-    const matriceFA = this.matriceForm.get('covarianceMatrix') as FormArray;
-    return (matriceFA.at(rowIndex) as FormArray).controls;
-  }
-
+  getRowControls(i: number): FormControl[] {
+  const row = this.matriceForm.get('covarianceMatrix') as FormArray;
+  const rowControls = row.at(i) as FormArray;
+  return rowControls.controls as FormControl[];
+}
   onCovarianceChange(i: number, j: number) {
     const matriceFA = this.matriceForm.get('covarianceMatrix') as FormArray;
     if (i !== j) {
@@ -123,7 +125,7 @@ export class PortefeuilleOptimisationComponent implements OnInit {
       result => {
         this.optimisationResult = result;
         this.loadingOptimisation = false;
-        this.afficherGraphique(); // déplacer ici après réception du résultat
+        this.afficherGraphique();
       },
       err => {
         this.erreurMessage = err.error?.detail || 'Erreur lors de l’optimisation.';
@@ -159,7 +161,17 @@ export class PortefeuilleOptimisationComponent implements OnInit {
   }
 
   afficherGraphique(): void {
-    const ctx = document.getElementById('frontiereChart') as HTMLCanvasElement;
+    const canvas = this.chartRef?.nativeElement;
+    if (!canvas) {
+      console.error("Canvas non disponible");
+      return;
+    }
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      console.error("Impossible d'obtenir le contexte 2D du canvas.");
+      return;
+    }
 
     if (this.chartInstance) {
       this.chartInstance.destroy();
@@ -203,9 +215,7 @@ export class PortefeuilleOptimisationComponent implements OnInit {
             callbacks: {
               label: (context) => {
                 const raw = context.raw as { x: number, y: number };
-                const x = raw.x.toFixed(2);
-                const y = raw.y.toFixed(2);
-                return ` Risque: ${x}%, Rendement: ${y}%`;
+                return ` Risque: ${raw.x.toFixed(2)}%, Rendement: ${raw.y.toFixed(2)}%`;
               }
             }
           }
@@ -235,6 +245,7 @@ export class PortefeuilleOptimisationComponent implements OnInit {
       }
     });
   }
+
 
   getCovarianceRow(i: number): FormGroup {
     return this.matriceForm.get('covarianceMatrix')?.get(i.toString()) as FormGroup;
