@@ -4,10 +4,7 @@ table {
   text-align: center;
 }
 
-canvas {
-  max-width: 100%;
-  margin-top: 30px;
-}
+
 .alert-success {
   border-left: 5px solid #28a745;
   padding: 1rem;
@@ -18,8 +15,8 @@ canvas {
 }
 
 .meilleur {
-  background-color: #e0ffe0;
-  border-left: 5px solid #28a745;
+  background-color: #12ce12;
+  border-left: 5px solid #afd6b8;
   font-weight: bold;
 }
 .note {
@@ -29,21 +26,17 @@ canvas {
 }
 
 .meilleur-portefeuille {
-  border: 2px solid #4caf50;
+  border: 2px solid #07f10f;
   background-color: #e8f5e9;
   font-weight: bold;
 }
-.chart-legend {
-  margin: 1rem 0;
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  font-size: 14px;
 
-  .legend-box {
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-    margin-right: 5px;
-  }
+
+.table-scrollable {
+  max-height: 300px;
+  overflow-y: auto;
+  display: block;
 }
+
+
+

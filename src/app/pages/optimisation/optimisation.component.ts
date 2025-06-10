@@ -5,17 +5,19 @@ import { OptimisationResponse } from '@app/model/optimisation';
 import { OperationService } from '@app/services/operation.service';
 import { CommonModule } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
+import { HeaderComponent } from '@app/components/header/header.component';
+import { finalize } from 'rxjs';
+
 Chart.register(...registerables);
 
 @Component({
   standalone: true,
   selector: 'app-portefeuille-optimisation',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, HeaderComponent],
   templateUrl: './optimisation.component.html',
   styleUrl: './optimisation.component.scss'
 })
-export class PortefeuilleOptimisationComponent implements OnInit {
-   @ViewChild('frontiereChartCanvas', { static: false }) chartRef!: ElementRef<HTMLCanvasElement>;
+export class PortefeuilleOptimisationComponent implements OnInit { 
   chartInstance: Chart | null = null;
 
   portefeuilles: Portefeuille[] = [];
@@ -42,6 +44,7 @@ export class PortefeuilleOptimisationComponent implements OnInit {
   ngOnInit(): void {
     this.operationService.getPortefeuilles().subscribe(data => {
       this.portefeuilles = data;
+
     });
   }
 
@@ -71,15 +74,48 @@ export class PortefeuilleOptimisationComponent implements OnInit {
     for (let i = 0; i < n; i++) {
       const rowFA = this.fb.array([]);
       for (let j = 0; j < n; j++) {
-        const value = (i === j) ? 1 : 0;
-        rowFA.push(this.fb.control({ value, disabled: i === j }, [
-          Validators.required,
-          Validators.min(-1),
-          Validators.max(1)
-        ]));
+        if (i != j) {
+          const typeCateg = this.comparerCategories(this.actifs[i].categorie, this.actifs[j].categorie);
+          if (typeCateg === 'same') {
+            rowFA.push(this.fb.control({ value: 0.7, disabled: false }, [
+              Validators.required,
+              Validators.min(0.7),
+              Validators.max(0.999)
+            ]));// Valeur fixe pour les mêmes catégories
+          }
+          else if (typeCateg === 'different') {
+            rowFA.push(this.fb.control({ value: 0, disabled: false }, [
+              Validators.required,
+              Validators.min(-0.299),
+              Validators.max(0.699)
+            ]));
+          } else {
+            rowFA.push(this.fb.control({ value: -0.3, disabled: false }, [
+              Validators.required,
+              Validators.min(-0.3),
+              Validators.max(-1)
+            ]));
+
+          }
+        }
+        else {
+          rowFA.push(this.fb.control({ value: 1, disabled: true }));
+        }
       }
       matriceFA.push(rowFA);
     }
+  }
+
+
+  comparerCategories(categorie1: string, categorie2: string): string {
+    if (categorie1 === categorie2) {
+      return 'same';
+    } else if ((categorie1 === 'Crypto' && categorie2 === 'Obligation') || (categorie1 === 'Obligation' && categorie2 === 'Crypto')) {
+      return 'different';
+    } else {
+      return 'opposite';
+    }
+
   }
 
   resetMatriceForm() {
@@ -90,10 +126,10 @@ export class PortefeuilleOptimisationComponent implements OnInit {
   }
 
   getRowControls(i: number): FormControl[] {
-  const row = this.matriceForm.get('covarianceMatrix') as FormArray;
-  const rowControls = row.at(i) as FormArray;
-  return rowControls.controls as FormControl[];
-}
+    const row = this.matriceForm.get('covarianceMatrix') as FormArray;
+    const rowControls = row.at(i) as FormArray;
+    return rowControls.controls as FormControl[];
+  }
   onCovarianceChange(i: number, j: number) {
     const matriceFA = this.matriceForm.get('covarianceMatrix') as FormArray;
     if (i !== j) {
@@ -121,11 +157,14 @@ export class PortefeuilleOptimisationComponent implements OnInit {
     if (!this.validerMatrice(matrice)) return;
 
     this.loadingOptimisation = true;
-    this.operationService.optimiserPortefeuille(this.selectedPortefeuilleId, matrice).subscribe(
+    this.operationService.optimiserPortefeuille(this.selectedPortefeuilleId, matrice)
+    .subscribe(
       result => {
         this.optimisationResult = result;
         this.loadingOptimisation = false;
-        this.afficherGraphique();
+        setTimeout(()=> {
+          this.afficherGraphique()
+        }, 500); // Utiliser setTimeout pour s'assurer que le graphique est affiché après la mise à jour du DOM
       },
       err => {
         this.erreurMessage = err.error?.detail || 'Erreur lors de l’optimisation.';
@@ -143,25 +182,43 @@ export class PortefeuilleOptimisationComponent implements OnInit {
       }
       for (let j = 0; j < n; j++) {
         const val = matrice[i][j];
-        if (val < -1 || val > 1) {
-          this.erreurMessage = `Valeur hors limites (-1 à 1) en position [${i + 1},${j + 1}]`;
-          return false;
+        const typeCteg = this.comparerCategories(this.actifs[i].categorie, this.actifs[j].categorie);
+        if (i!==j){
+        switch (typeCteg) {
+          case 'same':
+            if ( val < 0.7 || val > 0.999) {
+              this.erreurMessage = `La valeur pour les actifs très similaires doit être entre 0.7 et 0.999 en ligne ${i + 1}, colonne ${j + 1}`;
+              return false;
+            }
+            
+            break;
+          case 'different':
+            if (val < -0.299 || val > 0.699) {
+              this.erreurMessage = `La valeur pour les actifs différents doit être entre -0.299 et 0.699 en ligne ${i + 1}, colonne ${j + 1}`;
+              return false;
+            }
+
+            break;
+
+          default:
+            if (val < -1 || val > -0.3) {
+              this.erreurMessage = `La valeur pour les actifs opposés doit être entre -1 et -0.3 en ligne ${i + 1}, colonne ${j + 1}`;
+              return false;
+            }
+            break;
         }
-        if (i === j && val !== 1) {
-          this.erreurMessage = `La diagonale doit être égale à 1 en position [${i + 1},${j + 1}]`;
-          return false;
-        }
-        if (i > j && val !== matrice[j][i]) {
-          this.erreurMessage = `La matrice doit être symétrique : [${i + 1},${j + 1}] ≠ [${j + 1},${i + 1}]`;
-          return false;
-        }
+        
       }
+    }
     }
     return true;
   }
 
   afficherGraphique(): void {
-    const canvas = this.chartRef?.nativeElement;
+   if (this.chartInstance) {
+      this.chartInstance.destroy();
+    }
+    let  canvas = document.getElementById('frontiereChartCanvas') as HTMLCanvasElement;
     if (!canvas) {
       console.error("Canvas non disponible");
       return;
@@ -172,50 +229,37 @@ export class PortefeuilleOptimisationComponent implements OnInit {
       console.error("Impossible d'obtenir le contexte 2D du canvas.");
       return;
     }
+  
 
-    if (this.chartInstance) {
-      this.chartInstance.destroy();
-    }
+ 
 
-    const dataPoints = this.optimisationResult?.frontiere_efficiente?.map((point: any) => ({
+   const dataPoints = this.optimisationResult?.frontiere?.map((point: any) => ({
       x: point.risque * 100,
       y: point.rendement * 100
     })) || [];
-
+  console.log('Data points for chart:', dataPoints);
+  
+    if (dataPoints.length === 0) {
     this.chartInstance = new Chart(ctx, {
       type: 'scatter',
       data: {
-        datasets: [
-          {
-            label: 'Frontière efficiente',
-            data: dataPoints,
-            borderColor: '#3b82f6',
-            backgroundColor: 'rgba(59, 130, 246, 0.2)',
-            pointBackgroundColor: '#2563eb',
-            pointRadius: 5,
-            showLine: true,
-            tension: 0.3,
-            fill: false
-          }
-        ]
+        datasets: [{
+          label: 'Frontière efficiente',
+          data: dataPoints,
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          
+        }]
       },
       options: {
         responsive: true,
         plugins: {
           legend: {
-            display: true,
-            labels: {
-              color: '#1f2937',
-              font: {
-                size: 14
-              }
-            }
+            display: true
           },
           tooltip: {
             callbacks: {
-              label: (context) => {
-                const raw = context.raw as { x: number, y: number };
-                return ` Risque: ${raw.x.toFixed(2)}%, Rendement: ${raw.y.toFixed(2)}%`;
+              label: (context: any) => {
+                return `Risque: ${context.parsed.x.toFixed(2)}%, Rendement: ${context.parsed.y.toFixed(2)}%`;
               }
             }
           }
@@ -224,27 +268,23 @@ export class PortefeuilleOptimisationComponent implements OnInit {
           x: {
             title: {
               display: true,
-              text: 'Risque (%)',
-              color: '#111827'
+              text: 'Risque (%)'
             },
-            ticks: {
-              color: '#374151'
-            }
+            beginAtZero: true
           },
           y: {
             title: {
               display: true,
-              text: 'Rendement (%)',
-              color: '#111827'
+              text: 'Rendement (%)'
             },
-            ticks: {
-              color: '#374151'
-            }
+            beginAtZero: true
           }
         }
       }
     });
+    }
   }
+
 
 
   getCovarianceRow(i: number): FormGroup {

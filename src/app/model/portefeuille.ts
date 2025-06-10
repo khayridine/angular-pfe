@@ -6,7 +6,7 @@ export interface Portefeuille{
     montant_total: number;
     actifs: Actif[];
     id?: number;
-    nom?: string;
+    nom: string;
     
 }
 export interface Actif {

@@ -20,6 +20,7 @@ export class CreatePortefeuilleComponent implements OnInit {
 
   user: any;
   montantTotal: number = 0;
+  nom: string = '';
   actifs: Actif[] = [];
   messageRendement: string = '';
   afficherResultats: boolean = false;
@@ -192,6 +193,7 @@ export class CreatePortefeuilleComponent implements OnInit {
 }
 
   savePortefeuille(): void {
+    
     if(this.montantTotal <= 0) {
       this.messageErreur = 'Veuillez entrer un montant total supérieur à 0.';   
       return;
@@ -226,6 +228,8 @@ export class CreatePortefeuilleComponent implements OnInit {
 
     try {
       const portefeuille :Portefeuille = {
+        nom: this.nom,
+        
         montant_total: this.montantTotal,
          actifs: this.actifs 
       };

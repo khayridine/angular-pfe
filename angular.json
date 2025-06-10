@@ -25,7 +25,7 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
+            "assets": ["src/assets",
               {
                 "glob": "**/*",
                 "input": "public"
@@ -74,13 +74,16 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
+            
             "production": {
               "buildTarget": "pfe-front:build:production"
             },
             "development": {
               "buildTarget": "pfe-front:build:development"
             }
+            
           },
+        
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
@@ -95,10 +98,13 @@
             ],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
+            "assets": [ "src/assets",
               {
                 "glob": "**/*",
                 "input": "public"
+
+
+                
               }
             ],
             "styles": [

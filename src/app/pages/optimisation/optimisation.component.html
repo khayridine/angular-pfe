@@ -1,3 +1,4 @@
+<app-header />
 <div class="p-6 max-w-5xl mx-auto bg-gradient-to-br from-white via-gray-50 to-blue-100 rounded-xl shadow-lg">
     <h2 class="text-2xl font-bold text-blue-800 mb-4">Optimisation de Portefeuille</h2>
 
@@ -27,9 +28,12 @@ Pour chaque paire d’actifs, estimez à quel point ils évoluent ensemble dans 
 - Actifs très similaires → entre +0,7 et +0,9
 - Actifs assez différents → entre 0,0 et +0,3
 - Actifs opposés → entre –0,3 et –0,6">
-                ℹ️ Comment remplir la matrice ?
+                <h4
+                    class="text-yellow-700 bg-yellow-100 px-3 py-1 rounded-md inline-flex items-center gap-2 font-medium">
+                     <img height="24" width="24" src="/assets/icons/info.svg"/> Remplir la matrice ?
+                </h4>
             </div>
-             </h3>
+        </h3>
 
         <div class="overflow-auto bg-white rounded shadow mb-6 p-2">
             <table class="min-w-full table-auto border text-sm text-center">
@@ -59,7 +63,7 @@ Pour chaque paire d’actifs, estimez à quel point ils évoluent ensemble dans 
 
         <div *ngIf="loadingOptimisation" class="mt-4 text-blue-700">Calcul en cours...</div>
 
-        <div *ngIf="erreurMessage" class="mt-4 text-red-600">{{ erreurMessage }}</div>
+        <div *ngIf="erreurMessage" class="mt-4 text-danger ">{{ erreurMessage }}</div>
 
         <div *ngIf="optimisationResult"
             class="mt-6 bg-gradient-to-br from-white via-gray-50 to-green-50 p-6 rounded-xl shadow border border-green-200">
@@ -98,7 +102,8 @@ Pour chaque paire d’actifs, estimez à quel point ils évoluent ensemble dans 
 
             <div class="bg-white p-4 mt-2 rounded-xl shadow border">
 
-                <canvas #frontiereChartCanvas class="w-full max-h-96" height="300"></canvas>
+                <canvas id="frontiereChartCanvas" class="w-full max-h-96" height="300"></canvas>
+
             </div>
 
         </div>

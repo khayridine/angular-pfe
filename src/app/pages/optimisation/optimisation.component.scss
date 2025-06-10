@@ -1,5 +1,5 @@
 .container {
-  background: linear-gradient(to bottom right, #ffffff, #e7f1ff);
+  background: linear-gradient(to bottom right, #dad2d2, #e7f1ff);
   padding: 2rem;
   border-radius: 1rem;
   max-width: 900px;
@@ -26,13 +26,35 @@ button:hover {
   background-color: #1e40af;
 }
 
-.tooltip[title]:hover::after {
-  content: attr(title);
-  position: absolute;
-  background: #000;
-  color: #fff;
-  padding: 0.3rem;
-  font-size: 0.75rem;
-  border-radius: 0.25rem;
-  white-space: nowrap;
+
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: help;
+
+  &::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 0.5rem;
+    width: 260px;
+    background: #fefefe;
+    color: #333;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 0.8rem;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  &:hover::after {
+    opacity: 1;
+  }
 }

@@ -19,7 +19,7 @@ export class ComparerPortefeuillesComponent implements OnInit {
   chartActifs: any;
   chartCompare: any;
 
-  constructor(private operationService: OperationService) {}
+  constructor(private operationService: OperationService) { }
 
   ngOnInit(): void {
     this.fetchData();
@@ -50,14 +50,16 @@ export class ComparerPortefeuillesComponent implements OnInit {
     if (!canvasActifs) return;
     const ctx1 = canvasActifs.getContext('2d');
     if (!ctx1) return;
-
+    const topPortefeuilles = [...this.portefeuilles]
+      .sort((a, b) => b.sharpe - a.sharpe)
+      .slice(0, 10)
     this.chartActifs = new Chart(ctx1, {
       type: 'bar',
       data: {
-        labels: this.portefeuilles.map(p => 'PF ' + p.id),
+        labels: topPortefeuilles.map(p => 'Portefeuille ' + p.id),
         datasets: [{
           label: 'Nombre d’actifs',
-          data: this.portefeuilles.map(p => p.nombre_actifs),
+          data: topPortefeuilles.map(p => p.nombre_actifs),
           backgroundColor: '#4caf50'
         }]
       },
@@ -65,11 +67,10 @@ export class ComparerPortefeuillesComponent implements OnInit {
         responsive: true,
         plugins: {
           legend: { display: false },
-          title: { display: true, text: 'Nombre d’actifs par portefeuille' }
+          title: { display: true, text: 'Top 10 : Nombre d’actifs par portefeuille (par Sharpe)' }
         }
       }
     });
-
     // Bar Chart 2 : Comparaison des indicateurs
     const canvasCompare = document.getElementById('barChartCompare') as HTMLCanvasElement;
     if (!canvasCompare) return;
@@ -80,7 +81,7 @@ export class ComparerPortefeuillesComponent implements OnInit {
       type: 'bar',
       data: {
         labels: ['Rendement', 'Risque', 'Sharpe'],
-        datasets: this.portefeuilles.map(p => ({
+        datasets: topPortefeuilles.map(p => ({
           label: 'PF ' + p.id,
           data: [p.rendement, p.risque, p.sharpe],
           backgroundColor: this.meilleur && p.id === this.meilleur.id ? '#4caf50' : '#2196f3'
@@ -91,7 +92,7 @@ export class ComparerPortefeuillesComponent implements OnInit {
         plugins: {
           title: {
             display: true,
-            text: 'Comparaison des indicateurs clés'
+            text: 'Top 10 : Comparaison des indicateurs clés (par Sharpe)'
           }
         },
         scales: {
@@ -104,5 +105,6 @@ export class ComparerPortefeuillesComponent implements OnInit {
         }
       }
     });
+
   }
 }
