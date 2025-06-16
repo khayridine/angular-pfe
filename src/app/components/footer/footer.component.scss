@@ -1,0 +1,448 @@
+// Variables SCSS pour le footer
+$primary-color: #4f46e5;
+$secondary-color: #6366f1;
+$accent-color: #10b981;
+$text-primary: #1f2937;
+$text-secondary: #6b7280;
+$text-muted: #9ca3af;
+$bg-primary: #f8fafc;
+$bg-secondary: #e2e8f0;
+$bg-dark: #1f2937;
+$gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$gradient-accent: linear-gradient(135deg, #10b981 0%, #059669 100%);
+$border-radius: 12px;
+$card-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+$hover-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+
+// Styles pour le footer principal
+footer {
+  background: $gradient-primary !important;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  
+  // Effet de particules en arrière-plan
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  
+  // Contenu au-dessus du background
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .text-muted {
+    color: rgba(255, 255, 255, 0.8) !important;
+  }
+}
+
+// Section des réseaux sociaux
+.d-flex.justify-content-center.justify-content-lg-between {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+  
+  .me-5.d-none.d-lg-block {
+    span {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.9);
+      letter-spacing: 0.5px;
+    }
+  }
+  
+  // Icônes des réseaux sociaux
+  a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: white !important;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: $gradient-accent;
+      border-radius: 50%;
+      transform: scale(0);
+      transition: transform 0.3s ease;
+      z-index: -1;
+    }
+    
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      color: white !important;
+      
+      &::before {
+        transform: scale(1);
+      }
+      
+      i {
+        transform: scale(1.2);
+      }
+    }
+    
+    i {
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
+      z-index: 1;
+    }
+    
+    // Couleurs spécifiques pour chaque réseau social
+    &:nth-child(1):hover::before { // Facebook
+      background: linear-gradient(135deg, #1877f2 0%, #42a5f5 100%);
+    }
+    
+    &:nth-child(2):hover::before { // Twitter
+      background: linear-gradient(135deg, #1da1f2 0%, #0d8bd9 100%);
+    }
+    
+    &:nth-child(3):hover::before { // Google
+      background: linear-gradient(135deg, #ea4335 0%, #fbbc05 100%);
+    }
+    
+    &:nth-child(4):hover::before { // Instagram
+      background: linear-gradient(135deg, #e4405f 0%, #f77737 50%, #fcaf45 100%);
+    }
+    
+    &:nth-child(5):hover::before { // LinkedIn
+      background: linear-gradient(135deg, #0077b5 0%, #00a0dc 100%);
+    }
+    
+    &:nth-child(6):hover::before { // GitHub
+      background: linear-gradient(135deg, #333 0%, #24292e 100%);
+    }
+  }
+}
+
+// Section des liens
+.container.text-center.text-md-start {
+  padding: 3rem 0;
+  
+  .row.mt-3 {
+    margin-top: 2rem !important;
+  }
+  
+  // Colonnes du footer
+  .col-md-3, .col-md-2, .col-md-4, .col-lg-2, .col-lg-3, .col-lg-4, .col-xl-2, .col-xl-3 {
+    margin-bottom: 2rem;
+    
+    // Titres des sections
+    h6 {
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem !important;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 40px;
+        height: 3px;
+        background: $gradient-accent;
+        border-radius: 2px;
+      }
+      
+      i {
+        color: #fbbf24;
+        margin-right: 0.5rem;
+        font-size: 1.2rem;
+      }
+    }
+    
+    // Paragraphes et liens
+    p {
+      margin-bottom: 0.8rem;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.8);
+      
+      a {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        position: relative;
+        
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          width: 0;
+          height: 2px;
+          background: $gradient-accent;
+          transition: width 0.3s ease;
+        }
+        
+        &:hover {
+          color: white;
+          transform: translateX(5px);
+          
+          &::after {
+            width: 100%;
+          }
+        }
+      }
+      
+      // Icônes de contact
+      i {
+        color: #fbbf24;
+        margin-right: 0.8rem;
+        width: 20px;
+        text-align: center;
+      }
+    }
+  }
+  
+  // Section FinLogik Company
+  .col-md-3.col-lg-4.col-xl-3 {
+    h6 {
+      font-size: 1.3rem;
+      
+      i.fas.fa-gem {
+        color: #fbbf24;
+        margin-right: 0.8rem;
+        animation: pulse 2s infinite;
+      }
+    }
+    
+    p {
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+  }
+  
+  // Section Products
+  .col-md-2.col-lg-2.col-xl-2 {
+    a {
+      font-weight: 500;
+      
+      &:hover {
+        font-weight: 600;
+      }
+    }
+  }
+  
+  // Section Contact
+  .col-md-4.col-lg-3.col-xl-3 {
+    p {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      
+      i {
+        margin-top: 2px;
+        flex-shrink: 0;
+      }
+    }
+  }
+}
+
+// Section copyright
+.text-center.p-4 {
+  background: rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  
+  a {
+    color: white !important;
+    text-decoration: none;
+    font-weight: 700 !important;
+    transition: all 0.3s ease;
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: $gradient-accent;
+      transition: width 0.3s ease;
+    }
+    
+    &:hover {
+      &::after {
+        width: 100%;
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Animation d'apparition du footer
+footer {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .d-flex.justify-content-center.justify-content-lg-between {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+    
+    .me-5.d-none.d-lg-block {
+      display: none !important;
+    }
+    
+    div:last-child {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+  }
+  
+  .container.text-center.text-md-start {
+    padding: 2rem 0;
+    text-align: center !important;
+    
+    .col-md-3, .col-md-2, .col-md-4, .col-lg-2, .col-lg-3, .col-lg-4, .col-xl-2, .col-xl-3 {
+      margin-bottom: 2rem;
+      
+      h6::after {
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      
+      p {
+        justify-content: center;
+        text-align: center;
+      }
+    }
+  }
+  
+  .text-center.p-4 {
+    padding: 1.5rem !important;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .d-flex.justify-content-center.justify-content-lg-between {
+    padding: 1rem !important;
+    
+    a {
+      width: 40px;
+      height: 40px;
+      
+      i {
+        font-size: 1rem;
+      }
+    }
+  }
+  
+  .container.text-center.text-md-start {
+    .col-md-3, .col-md-2, .col-md-4, .col-lg-2, .col-lg-3, .col-lg-4, .col-xl-2, .col-xl-3 {
+      h6 {
+        font-size: 1rem;
+      }
+      
+      p {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+// Effets hover améliorés pour l'ensemble du footer
+footer {
+  .container:hover {
+    .col-md-3, .col-md-2, .col-md-4, .col-lg-2, .col-lg-3, .col-lg-4, .col-xl-2, .col-xl-3 {
+      &:not(:hover) {
+        opacity: 0.7;
+      }
+    }
+  }
+  
+  .col-md-3, .col-md-2, .col-md-4, .col-lg-2, .col-lg-3, .col-lg-4, .col-xl-2, .col-xl-3 {
+    transition: all 0.3s ease;
+    padding: 1rem;
+    border-radius: $border-radius;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+      transform: translateY(-2px);
+      opacity: 1 !important;
+    }
+  }
+}
+
+// Amélioration de l'accessibilité
+a:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: 2px;
+}
+
+// États de chargement (optionnel)
+.loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+// Effets de parallaxe subtile (optionnel)
+@media (min-width: 992px) {
+  footer::before {
+    animation: float 20s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}

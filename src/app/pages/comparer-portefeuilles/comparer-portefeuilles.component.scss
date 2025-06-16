@@ -1,42 +1,370 @@
-table {
-  width: 100%;
-  margin-top: 20px;
-  text-align: center;
+// Variables
+$primary-color: #2c3e50;
+$secondary-color: #3498db;
+$success-color: #27ae60;
+$warning-color: #f39c12;
+$danger-color: #e74c3c;
+$light-bg: #ecf0f1;
+$dark-bg: #34495e;
+$text-color: #2c3e50;
+$border-color: #bdc3c7;
+$shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+$shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.2);
+$border-radius: 10px;
+$transition: all 0.3s ease;
+
+// Mixins
+@mixin card-style {
+  background: white;
+  border-radius: $border-radius;
+  box-shadow: $shadow;
+  transition: $transition;
+  
+  &:hover {
+    box-shadow: $shadow-hover;
+    transform: translateY(-2px);
+  }
 }
 
+@mixin gradient-bg($color1, $color2) {
+  background: linear-gradient(135deg, $color1 0%, $color2 100%);
+}
 
+// Page principale
+.portfolio-comparison {
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  h2 {
+    color: $primary-color;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    position: relative;
+    
+    &::after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: $secondary-color;
+      margin: 1rem auto;
+      border-radius: 2px;
+    }
+  }
+
+  h3 {
+    color: $primary-color;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 2.5rem 0 1rem;
+    display: flex;
+    align-items: center;
+    
+    &::before {
+      content: '📊';
+      margin-right: 0.5rem;
+      font-size: 1.5rem;
+    }
+  }
+}
+
+// Container du tableau
+.table-scrollable {
+  @include card-style;
+  overflow-x: auto;
+  margin-bottom: 2rem;
+  border-radius: $border-radius;
+  
+  // Scrollbar personnalisée
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: $secondary-color;
+    border-radius: 10px;
+    
+    &:hover {
+      background: darken($secondary-color, 10%);
+    }
+  }
+}
+
+// Styles du tableau
+.table {
+  margin-bottom: 0;
+  
+  &.table-bordered {
+    border: none;
+    
+    th, td {
+      border: 1px solid lighten($border-color, 10%);
+      padding: 1rem 0.75rem;
+      vertical-align: middle;
+    }
+  }
+
+  thead.table-dark {
+    th {
+      @include gradient-bg($primary-color, lighten($primary-color, 10%));
+      color: white;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.9rem;
+      border: none;
+      position: relative;
+      
+      &:first-child {
+        border-top-left-radius: $border-radius;
+      }
+      
+      &:last-child {
+        border-top-right-radius: $border-radius;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      transition: $transition;
+      
+      &:hover {
+        background-color: lighten($secondary-color, 45%);
+        transform: scale(1.01);
+      }
+      
+      &:nth-child(even) {
+        background-color: rgba($secondary-color, 0.05);
+      }
+
+      td {
+        font-weight: 500;
+        color: $text-color;
+        
+        &:first-child {
+          font-weight: 700;
+          color: $secondary-color;
+        }
+        
+        // Styles pour les pourcentages
+        &:nth-child(4), &:nth-child(5) {
+          font-weight: 600;
+          
+          &::after {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: 0.5rem;
+          }
+        }
+        
+        // Rendement (vert)
+        &:nth-child(4)::after {
+          background-color: $success-color;
+        }
+        
+        // Risque (orange)
+        &:nth-child(5)::after {
+          background-color: $warning-color;
+        }
+        
+        // Sharpe ratio
+        &:last-child {
+          font-weight: 700;
+          color: $primary-color;
+        }
+      }
+    }
+  }
+}
+
+// Alert de succès
 .alert-success {
-  border-left: 5px solid #28a745;
-  padding: 1rem;
-  background-color: #e6ffed;
-  font-size: 1rem;
+  @include card-style;
+  @include gradient-bg(lighten($success-color, 45%), lighten($success-color, 40%));
+  border: 2px solid $success-color;
+  color: darken($success-color, 20%);
+  padding: 1.5rem;
+  margin: 2rem 0;
+  font-size: 1.1rem;
   line-height: 1.6;
-  border-radius: 8px;
+  
+  strong {
+    color: darken($success-color, 30%);
+    font-weight: 700;
+  }
+  
+  &::before {
+    content: '🏆';
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+  }
 }
 
-.meilleur {
-  background-color: #12ce12;
-  border-left: 5px solid #afd6b8;
-  font-weight: bold;
-}
+// Notes informatives
 .note {
-  font-size: 0.9rem;
-  color: #555;
-  margin-top: 0.5rem;
+  @include card-style;
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border-left: 5px solid $secondary-color;
+  padding: 1.25rem;
+  margin: 1rem 0 2rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: darken($secondary-color, 25%);
+  
+  strong {
+    color: darken($secondary-color, 35%);
+    font-weight: 600;
+  }
 }
 
-.meilleur-portefeuille {
-  border: 2px solid #07f10f;
-  background-color: #e8f5e9;
-  font-weight: bold;
+// Container des graphiques
+.chart-container {
+  @include card-style;
+  padding: 1rem;           // réduire un peu le padding pour compacter
+  margin: 1rem auto;       // centrer horizontalement
+  max-width: 950px;        // réduire la largeur max
+  text-align: center;
+  background: white;
+
+  canvas {
+    width: 100% !important; // prendre toute la largeur max du container
+    height: 400px !important;  // hauteur fixe plus petite
+    border-radius: 8px;
+  }
 }
 
+// Animations
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Application des animations
 .table-scrollable {
   max-height: 300px;
   overflow-y: auto;
   display: block;
 }
+.table-scrollable {
+  animation: fadeInUp 0.6s ease-out;
+}
 
+.alert-success {
+  animation: slideInRight 0.8s ease-out;
+}
 
+.chart-container {
+  animation: fadeInUp 0.8s ease-out;
+  
+  &:nth-of-type(2) {
+    animation-delay: 0.2s;
+  }
+}
 
+// Responsive Design
+@media (max-width: 768px) {
+  .portfolio-comparison {
+    padding: 1rem 0.5rem;
+    
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      margin: 2rem 0 0.5rem;
+    }
+  }
+  
+  .table {
+    font-size: 0.9rem;
+    
+    th, td {
+      padding: 0.75rem 0.5rem;
+    }
+  }
+  
+  .chart-container {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .alert-success {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+  
+  .note {
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .portfolio-comparison h2 {
+    font-size: 1.8rem;
+  }
+  
+  .table {
+    font-size: 0.8rem;
+    
+    th, td {
+      padding: 0.5rem 0.25rem;
+    }
+  }
+}
+
+// États de chargement (optionnel)
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  
+  &::after {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border: 4px solid $light-bg;
+    border-top: 4px solid $secondary-color;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

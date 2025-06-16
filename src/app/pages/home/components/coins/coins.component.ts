@@ -14,7 +14,7 @@ export class CoinsComponent {
     api: string =
         'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false';
     coins: Coin[] = [];
-    titles: string[] = ['#', 'Coin', 'Price', 'Price Change', ]; //'24H Volume'
+    titles: string[] = ['#', 'Coin', 'Price', 'Price Change','total_volume' ]; //'24H Volume'
     searchText: string = '';
     filteredCoints: Coin[] = [];
     constructor(private http: HttpClient) { }

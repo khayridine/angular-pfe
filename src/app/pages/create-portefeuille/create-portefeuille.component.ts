@@ -251,5 +251,8 @@ export class CreatePortefeuilleComponent implements OnInit {
 allerComparer(): void {
   this.router.navigate(['/comparer-portefeuilles']);
 }
+goToPortefeuille(): void  {
+    this.router.navigate(['/portfeuille']);
+  }
   
 }

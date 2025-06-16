@@ -1,29 +1,503 @@
-.container {
-    background: linear-gradient(to right, #f2f2f2, #d3e0ea);
-    padding: 2rem;
-    border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    max-width: 800px;
-    margin: auto;
+// Variables
+$primary-color: #007bff;
+$secondary-color: #6c757d;
+$success-color: #28a745;
+$danger-color: #dc3545;
+$light-color: #f8f9fa;
+$white: #ffffff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+
+$border-radius: 12px;
+$border-radius-sm: 8px;
+$box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$box-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+// Mixins
+@mixin gradient-bg($color1, $color2) {
+  background: linear-gradient(135deg, $color1 0%, $color2 100%);
+}
+
+@mixin card-style {
+  background: $white;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+  transition: $transition;
+  
+  &:hover {
+    box-shadow: $box-shadow-lg;
+    transform: translateY(-2px);
+  }
+}
+
+@mixin custom-scrollbar($thumb-color: $primary-color) {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
   }
   
+  &::-webkit-scrollbar-track {
+    background: $gray-200;
+    border-radius: 10px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: $thumb-color;
+    border-radius: 10px;
+    transition: $transition;
+    
+    &:hover {
+      background: darken($thumb-color, 10%);
+    }
+  }
+  
+  &::-webkit-scrollbar-corner {
+    background: $gray-200;
+  }
+}
+
+// Page principale
+.my-portfolios-page {
+  min-height: 100vh;
+  @include gradient-bg(#f8fafc, #e2e8f0);
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+}
+
+.container {
+  max-width: 1400px;
+  padding: 2rem 1rem;
+
+  // Titre principal
   h2 {
+    color: $gray-800;
+    font-size: 2.5rem;
+    font-weight: 800;
     text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+    
+   
+    }
+    
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: $primary-color;
+      border-radius: 2px;
+    }
+  }
+
+
+// Container du tableau principal avec scroll
+.table-responsive {
+  @include card-style;
+  overflow: auto;
+  max-height: 80vh; // Limite la hauteur pour forcer le scroll vertical
+  border-radius: $border-radius;
+  border: none;
+  @include custom-scrollbar($primary-color);
+  
+  // Gestion du scroll horizontal et vertical
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+// Styles du tableau principal
+.table {
+  margin-bottom: 0;
+  min-width: 1000px; // Force le scroll horizontal sur petits écrans
+  width: 100%;
+  
+  &.table-bordered {
+    border: none;
+    
+    th, td {
+      border: 1px solid $gray-300;
+      padding: 1.25rem 1rem;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+  }
+
+  // En-tête du tableau
+  thead.table-light {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    
+    th {
+      @include gradient-bg($light-color, darken($light-color, 5%));
+      color: $gray-800;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 0.9rem;
+      border-bottom: 2px solid $primary-color;
+      
+      &:first-child {
+        border-top-left-radius: $border-radius;
+      }
+      
+      &:last-child {
+        border-top-right-radius: $border-radius;
+      }
+    }
+  }
+
+  // Lignes du tableau
+  tbody {
+    tr {
+      transition: $transition;
+      
+      &:hover {
+        background-color: rgba($primary-color, 0.05);
+        transform: scale(1.001);
+      }
+      
+      &:nth-child(even) {
+        background-color: rgba($gray-100, 0.5);
+      }
+
+      td {
+        font-weight: 500;
+        color: $gray-700;
+        position: relative;
+        
+        // Nom du portefeuille
+        &:first-child {
+          font-weight: 700;
+          color: $primary-color;
+          min-width: 150px;
+        }
+        
+        // Montant
+        &:nth-child(2) {
+          font-weight: 600;
+          color: $success-color;
+          min-width: 120px;
+        }
+        
+        // Colonne des actifs avec scroll interne
+        &:nth-child(3) {
+          padding: 0.5rem;
+          min-width: 600px; // Largeur minimum pour la colonne actifs
+        }
+        
+        // Actions
+        &:last-child {
+          min-width: 180px;
+        }
+      }
+    }
+  }
+}
+
+// Container des actifs avec scroll interne
+.assets-container {
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: auto;
+  @include custom-scrollbar($secondary-color);
+  border-radius: $border-radius-sm;
+  background: rgba($white, 0.8);
+}
+
+// Tableau des actifs
+.table-sm {
+  font-size: 0.85rem;
+  min-width: 500px; // Force le scroll horizontal pour le tableau interne
+  
+  &.table-striped {
+    tbody tr:nth-of-type(odd) {
+      background-color: rgba($gray-100, 0.8);
+    }
+  }
+
+  thead.table-secondary {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    
+    &.sticky-top {
+      th {
+        @include gradient-bg($secondary-color, darken($secondary-color, 5%));
+        color: $white;
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        padding: 0.75rem 0.5rem;
+        border: none;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      transition: $transition;
+      
+      &:hover {
+        background-color: rgba($primary-color, 0.1) !important;
+      }
+
+      td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.8rem;
+        border: 1px solid rgba($gray-300, 0.5);
+        white-space: nowrap;
+        
+        // Styles spécifiques par colonne
+        &:nth-child(1) { // Nom
+          font-weight: 600;
+          color: $gray-800;
+          min-width: 80px;
+        }
+        
+        &:nth-child(2) { // Catégorie
+          font-weight: 500;
+          min-width: 80px;
+          
+          // Couleurs par catégorie
+          &:contains("Action") { color: #e74c3c; }
+          &:contains("Crypto") { color: #f39c12; }
+          &:contains("Obligation") { color: #27ae60; }
+          &:contains("Matière première") { color: #8e44ad; }
+          &:contains("Immobilier") { color: #3498db; }
+        }
+        
+        &:nth-child(3) { // Type
+          color: $gray-600;
+          min-width: 70px;
+        }
+        
+        &:nth-child(4) { // Pourcentage
+          font-weight: 600;
+          color: $primary-color;
+          min-width: 60px;
+        }
+        
+        &:nth-child(5) { // Rendement
+          font-weight: 600;
+          color: $success-color;
+          min-width: 70px;
+        }
+        
+        &:nth-child(6) { // Volatilité
+          font-weight: 600;
+          color: $danger-color;
+          min-width: 70px;
+        }
+      }
+    }
+  }
+}
+
+// Boutons d'action
+.btn {
+  border-radius: $border-radius-sm;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  transition: $transition;
+  border: none;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $box-shadow;
+  }
+  
+  &.btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}
+
+.btn-primary {
+  @include gradient-bg($primary-color, darken($primary-color, 10%));
+  
+  &:hover {
+    @include gradient-bg(darken($primary-color, 5%), darken($primary-color, 15%));
+  }
+}
+
+.btn-danger {
+  @include gradient-bg($danger-color, darken($danger-color, 10%));
+  
+  &:hover {
+    @include gradient-bg(darken($danger-color, 5%), darken($danger-color, 15%));
+  }
+}
+
+.btn-success {
+  @include gradient-bg($success-color, darken($success-color, 10%));
+  font-size: 1.1rem;
+  padding: 0.75rem 2rem;
+  
+  &:hover {
+    @include gradient-bg(darken($success-color, 5%), darken($success-color, 15%));
+    transform: translateY(-3px);
+  }
+}
+
+// Section du bouton de comparaison
+.comparison-section {
+  text-align: center;
+  margin: 3rem 0;
+  padding: 2rem;
+  @include card-style;
+  
+  .btn-success {
+    &::before {
+      content: '⚖️';
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+// Animations
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+// Application des animations
+.table-responsive {
+  animation: slideInUp 0.6s ease-out;
+}
+
+.comparison-section {
+  animation: fadeIn 0.8s ease-out;
+}
+
+// Responsive Design
+@media (max-width: 1200px) {
+  .table {
+    min-width: 900px;
+  }
+  
+  .table-sm {
+    min-width: 450px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem 0.5rem;
+    
+    h2 {
+      font-size: 2rem;
+    }
+  }
+  
+  .table {
+    min-width: 800px;
+    
+    th, td {
+      padding: 1rem 0.75rem;
+      font-size: 0.9rem;
+    }
+  }
+  
+  .table-sm {
+    min-width: 400px;
+    font-size: 0.8rem;
+  }
+  
+  .btn-success {
+    font-size: 1rem;
+    padding: 0.65rem 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .table {
+    min-width: 700px;
+    
+    th, td {
+      padding: 0.75rem 0.5rem;
+      font-size: 0.85rem;
+    }
+  }
+  
+  .table-sm {
+    min-width: 350px;
+    font-size: 0.75rem;
+    
+    th, td {
+      padding: 0.5rem 0.25rem;
+    }
+  }
+  
+  .btn {
+    &.btn-sm {
+      padding: 0.3rem 0.6rem;
+      font-size: 0.75rem;
+    }
+  }
+}
+
+// États vides
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: $gray-600;
+  
+  .empty-icon {
+    font-size: 4rem;
     margin-bottom: 1rem;
   }
   
-  canvas {
-    display: block;
-    margin: 2rem auto;
-    max-width: 100%;
-  }
-  @keyframes flash {
-    0% { opacity: 1; }
-    50% { opacity: 0.1; }
-    100% { opacity: 1; }
+  h3 {
+    color: $gray-700;
+    margin-bottom: 1rem;
   }
   
-  .back-icon.flash {
-    animation: flash 0.3s ease-in-out; 
+  p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
   }
+}
+
+// Indicateurs de scroll
+.scroll-indicator {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: $gray-600;
+  font-size: 0.8rem;
+  opacity: 0.7;
   
+  &.horizontal {
+    bottom: 10px;
+    top: auto;
+    transform: none;
+  }
+}

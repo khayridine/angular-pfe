@@ -1,54 +1,60 @@
 <app-header />
 
-<div *ngIf="operations.length > 0; else noData" style="margin-top: 30px;">
-  
-  
-  <table style="width: 100%; border-collapse: collapse; background-color: #fff; border-radius: 8px; overflow: hidden;">
-    <thead style="background-color: #1376da; color: white;">
-      <tr style="text-align: center;">
-        <th style="padding: 12px;">ID</th>
-        <th style="padding: 12px;">Type</th>
-        <th style="padding: 12px;">Date</th>
-        <th style="padding: 12px;">Montant (€)</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let op of operations" style="text-align: center;">
-        <td style="padding: 10px; border-bottom: 1px solid #ddd;">{{ op.id }}</td>
-        <td style="padding: 10px; border-bottom: 1px solid #ddd;">{{ op.type }}</td>
-        <td style="padding: 10px; border-bottom: 1px solid #ddd;">{{ op.date }}</td>
-        <td style="padding: 10px; border-bottom: 1px solid #ddd;">{{ op.montant | number: '1.2-2' }} €</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<div class="container mt-4">
+  <h2 class="text-center mb-4">Mes Portefeuilles</h2>
 
-<ng-template #noData>
-  <p style="text-align: center; color: #999;">Aucune opération disponible.</p>
-</ng-template>
-
-<!-- Affichage du graphique des opérations -->
-<div *ngIf="operations.length > 0" style="margin-top: 40px;">
-  
-  <app-title [label]="'Répartition des opérations par type'"></app-title>
-  <div style="max-width: 600px; margin: 0 auto;">
-    <canvas *ngIf="isBrowser" baseChart
-      [data]="chartData"
-      [type]="chartType"
-      [options]="chartOptions">
-    </canvas>
+  <div  class="table-scrollable" style="max-height: 400px; overflow-y: auto;">
+    <table class="table table-bordered align-middle text-center">
+      <thead class="table-light">
+        <tr>
+          <th style="width: 15%">Nom</th>
+          <th style="width: 15%">Montant total</th>
+          <th style="width: 55%">Actifs</th>
+          <th style="width: 15%">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pf of portefeuilles">
+          <td>{{ pf.nom }}</td>
+          <td>{{ pf.montant_total | number: '1.2-2' }} €</td>
+          <td>
+            <div style="max-height: 200px; overflow-y: auto;">
+              <table class="table table-sm table-striped mb-0">
+                <thead class="table-secondary sticky-top">
+                  <tr>
+                    <th>Nom</th>
+                    <th>Catégorie</th>
+                    <th>Type</th>
+                    <th>Pourcentage</th>
+                    <th>Rendement</th>
+                    <th>Volatilité</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let actif of pf.actifs">
+                    <td>{{ actif.nom }}</td>
+                    <td>{{ actif.categorie }}</td>
+                    <td>{{ actif.type }}</td>
+                    <td>{{ actif.pourcentage }}%</td>
+                    <td>{{ actif.rendement }}%</td>
+                    <td>{{ actif.volatilite }}%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-primary btn-sm me-2" (click)="modifier(pf)">Modifier</button>
+            <button class="btn btn-danger btn-sm" (click)="supprimer(pf.id!)">Supprimer</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 
-<!-- Affichage des prix des crypto-monnaies -->
-<div *ngIf="cryptoPrices.bitcoin && cryptoPrices.ethereum" style="margin-top: 40px;">
-  
-  <app-title [label]="'Prix des Crypto-monnaies'"></app-title>
-  <p style="text-align: center;">Bitcoin (BTC): ${{ cryptoPrices.bitcoin?.usd | number:'1.0-0' }}</p>
-  <p style="text-align: center;">Ethereum (ETH): ${{ cryptoPrices.ethereum?.usd | number:'1.0-0' }}</p>
-</div>
-<div style="margin-bottom: 20px; text-align: center;">
-  <button class="btn btn-primary" (click)="goToFormulaire()">
-    Comparer mes portefeuilles
+<div class="text-center mt-4 mb-4">
+  <button class="btn btn-success" (click)="goToFormulaire()">
+    Evaluer mon profil
   </button>
 </div>

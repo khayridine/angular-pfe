@@ -234,55 +234,55 @@ export class PortefeuilleOptimisationComponent implements OnInit {
  
 
    const dataPoints = this.optimisationResult?.frontiere?.map((point: any) => ({
-      x: point.risque * 100,
-      y: point.rendement * 100
+      x: point.risque ,
+      y: point.rendement
     })) || [];
   console.log('Data points for chart:', dataPoints);
   
-    if (dataPoints.length === 0) {
-    this.chartInstance = new Chart(ctx, {
-      type: 'scatter',
-      data: {
-        datasets: [{
-          label: 'Frontière efficiente',
-          data: dataPoints,
-          backgroundColor: 'rgba(54, 162, 235, 0.6)',
-          
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: true
-          },
-          tooltip: {
-            callbacks: {
-              label: (context: any) => {
-                return `Risque: ${context.parsed.x.toFixed(2)}%, Rendement: ${context.parsed.y.toFixed(2)}%`;
-              }
+    if (dataPoints.length > 0) {
+  this.chartInstance = new Chart(ctx, {
+    type: 'scatter',
+    data: {
+      datasets: [{
+        label: 'Frontière efficiente',
+        data: dataPoints,
+        backgroundColor: 'rgba(247, 28, 28, 0.94)',
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: true
+        },
+        tooltip: {
+          callbacks: {
+            label: (context: any) => {
+              return `Risque: ${context.parsed.x.toFixed()}%, Rendement: ${context.parsed.y.toFixed()}%`;
             }
           }
-        },
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: 'Risque (%)'
-            },
-            beginAtZero: true
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Risque (%)'
           },
-          y: {
-            title: {
-              display: true,
-              text: 'Rendement (%)'
-            },
-            beginAtZero: true
-          }
+          beginAtZero: true
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Rendement (%)'
+          },
+          beginAtZero: true
         }
       }
-    });
     }
+  });
+}
+
   }
 
 

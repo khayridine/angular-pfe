@@ -1,36 +1,49 @@
 <div>
-    <app-title [label]="'Liste Des Pièces'"></app-title>
+  <app-title [label]="'Liste Des Pièces'"></app-title>
 
-<input type="text" placeholder="chercher une pièce" class="form-control text-light border-0 my-4 text-center"
-    autofocus (keyup)="searchCoin()" [(ngModel)]="searchText" />
-<div class="overflow-y-scroll" style="height: 350px;">
-    <table class="table table-striped table-hover"></table>
-        <thead>
-            <tr>
-                <td *ngFor="let title of titles">
-                    {{ title }}
-                </td>
-            </tr>
-        </thead>
+  <input
+    type="text"
+    placeholder="Chercher une pièce"
+    class="form-control text-light border-0 my-4 text-center"
+    autofocus
+    (keyup)="searchCoin()"
+    [(ngModel)]="searchText"
+  />
 
-        <tbody>
-            <tr *ngFor="let coin of filteredCoints; let i = index">
-                <td>{{ i + 1 }}</td>
-                <td>
-                    <img [src]="coin.image" alt="{{ coin.name }}" style="width: 2rem" class="img-fluid me-4" />
-                    <span>{{ coin.name }}</span>
-                    <span class="ms-3 text-muted text-uppercase">{{ coin.symbol }}</span>
-                </td>
-                <td>{{ coin.current_price.toLocaleString() }}</td>
+  <div class="overflow-y-scroll" style="height: 350px;">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <td *ngFor="let title of titles">{{ title }}</td>
+        </tr>
+      </thead>
 
-                <td [ngClass]=" coin.price_change_percentage_24h > 0 ? 'text-success' : 'text-danger'
-              ">
-                    {{ coin.price_change_percentage_24h }}
-                </td>
-                <!--  <td>{{ coin.total_volume.toLocaleString() }}</td> -->
-            </tr>
-        </tbody>
-    
+      <tbody>
+        <tr *ngFor="let coin of filteredCoints; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>
+            <img
+              [src]="coin.image"
+              alt="{{ coin.name }}"
+              style="width: 2rem"
+              class="img-fluid me-2"
+            />
+            <span>{{ coin.name }}</span>
+            <span class="ms-2 text-muted text-uppercase">{{ coin.symbol }}</span>
+          </td>
+          <td>{{ coin.current_price.toLocaleString() }}</td>
+          <td
+            [ngClass]="
+              coin.price_change_percentage_24h > 0
+                ? 'text-success'
+                : 'text-danger'
+            "
+          >
+            {{ coin.price_change_percentage_24h.toFixed(2) }} %
+          </td>
+          <td>{{ coin.total_volume.toLocaleString() }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
-</div>
-

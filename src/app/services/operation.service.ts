@@ -77,4 +77,7 @@ export class OperationService {
       covariance_matrix: matrice 
     });
   }
+  deletePortefeuille(id: number): Observable<any> {
+  return this.http.delete(`${this.apiUrl}portefeuille/${id}`);
+}
 }

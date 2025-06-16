@@ -8,6 +8,7 @@
     <thead class="table-dark">
       <tr>
         <th>ID</th>
+        <th>Nom du portefeuille</th>
         <th>Montant Total</th>
         <th>Nombre d'actifs</th>
         <th>Rendement</th>
@@ -18,6 +19,7 @@
     <tbody>
       <tr *ngFor="let pf of portefeuilles">
         <td>{{ pf.id }}</td>
+        <td>{{ pf.nom }}</td>
         <td>{{ pf.montant_total }}</td>
         <td>{{ pf.nombre_actifs }}</td>
         <td>{{ pf.rendement | number: '1.2-2' }}%</td>
@@ -36,7 +38,7 @@
 
   <h3>Nombre d’actifs par portefeuille</h3>
   <p class="note">
-    ℹ️ Ce graphique montre combien d’actifs (ex : actions, obligations, etc.) sont inclus dans chaque portefeuille.
+     Ce graphique montre combien d’actifs (ex : actions, obligations, etc.) sont inclus dans chaque portefeuille.
     <br>
     Un plus grand nombre d’actifs permet généralement une <strong>meilleure diversification</strong>, ce qui peut <strong>réduire le risque global</strong>.
   </p>
@@ -46,7 +48,7 @@
 
   <h3>Comparaison des indicateurs clés</h3>
   <p class="note">
-    ℹ️ Cette comparaison permet de visualiser les <strong>indicateurs clés</strong> (Rendement, Risque, Sharpe) pour chaque portefeuille.
+     Cette comparaison permet de visualiser les <strong>indicateurs clés</strong> (Rendement, Risque, Sharpe) pour chaque portefeuille.
     <br>
     Cela vous aide à identifier celui qui présente le <strong>meilleur équilibre</strong> rendement/risque.
   </p>

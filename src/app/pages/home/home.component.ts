@@ -14,7 +14,7 @@ import { FooterComponent } from 'src/app/components/footer/footer.component';
   imports: [
     HeaderComponent, 
     CoinsComponent, 
-    ChartComponent,
+  
     DividendesComponent ,
     BulkQuotesComponent,
     FooterComponent,
@@ -22,17 +22,11 @@ import { FooterComponent } from 'src/app/components/footer/footer.component';
 })
 export class HomeComponent {
   message: string = '';
-  operations = [  
-    { id: 1, type: 'Achat', date: '2025-04-29', montant: 300 },
-    { id: 2, type: 'Vente', date: '2025-04-30', montant: 150 },
-    { id: 3, type: 'Vente', date: '2025-04-30', montant: 200 },
-    { id: 4, type: 'Achat', date: '2025-05-01', montant: 500 }
-  ];
+  
+  
 
   constructor(private router: Router) {}
-  goToPortefeuille(): void  {
-    this.router.navigate(['/portfeuille']);
-  }
+  
   
   goToOptimisation(): void  {
     this.router.navigate(['/optimisation']);

@@ -1,12 +1,459 @@
-app-herader {
-    position: fixed;
+// Variables SCSS
+$primary-color: #4f46e5;
+$primary-hover: #4338ca;
+$success-color: #10b981;
+$success-hover: #059669;
+$info-color: #3b82f6;
+$background-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$background-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+$background-hero: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+$card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+$card-shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+$border-radius: 20px;
+$border-radius-sm: 12px;
+$text-primary: #1f2937;
+$text-secondary: #6b7280;
+$text-muted: #9ca3af;
+
+// Styles pour le container principal
+.container-fluid {
+  background: $background-hero;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  
+  &.py-4 {
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+  }
+  
+  // Effet de particules en arrière-plan
+  &::before {
+    content: '';
+    position: absolute;
     top: 0;
-    width: 100%;
-    z-index: 1000;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+      radial-gradient(circle at 25% 25%, rgba(79, 70, 229, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  // Contenu au-dessus du background
+  > * {
+    position: relative;
+    z-index: 1;
+  }
 }
 
-.contrainer {
-    margin-top: 80px; /* Adjust based on the height of app-header */
-    max-height: calc(100vh - 80px); /* Adjust based on the height of app-header */
-    overflow-y: auto;
+// Section d'introduction héro
+.text-center {
+  &.mb-5 {
+    margin-bottom: 4rem !important;
+    padding: 3rem 2rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: $border-radius;
+    box-shadow: $card-shadow;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    
+    h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: $text-primary;
+      margin-bottom: 1.5rem !important;
+      position: relative;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: $background-primary;
+        border-radius: 2px;
+      }
+    }
+    
+    .text-muted {
+      font-size: 1.2rem;
+      line-height: 1.8;
+      color: $text-secondary !important;
+      max-width: 800px;
+      margin: 0 auto;
+      font-weight: 400;
+    }
+  }
+}
+
+// Boutons de la section héro
+.d-flex.justify-content-center.gap-3 {
+  gap: 1.5rem !important;
+  flex-wrap: wrap;
+  
+  .btn {
+    padding: 14px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 50px;
+    border: none;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    min-width: 200px;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.6s;
+    }
+    
+    &:hover::before {
+      left: 100%;
+    }
+    
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    &:active {
+      transform: translateY(-1px);
+    }
+  }
+  
+  .btn-success {
+    background: $background-success;
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+    
+    &:hover {
+      box-shadow: 0 12px 35px rgba(16, 185, 129, 0.4);
+      filter: brightness(1.1);
+    }
+  }
+  
+  .btn-primary {
+    background: $background-primary;
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.3);
+    
+    &:hover {
+      box-shadow: 0 12px 35px rgba(79, 70, 229, 0.4);
+      filter: brightness(1.1);
+    }
+  }
+}
+
+// Styles pour les rangées
+.row {
+  margin: 0 -1rem;
+  
+  &.mb-4 {
+    margin-bottom: 3rem !important;
+  }
+  
+  &.mb-5 {
+    margin-bottom: 4rem !important;
+  }
+  
+  .col-lg-6, .col-12 {
+    padding: 0 1rem;
+  }
+}
+
+// Section des quotes
+.col-lg-6 {
+  &.mb-5 {
+    margin-bottom: 3rem !important;
+  }
+
+  app-bulk-quotes {
+    display: block;
+    max-width: 100%;
+    width: 100%;
+    padding: 3rem;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: $border-radius;
+    box-shadow: $card-shadow;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.4s ease;
+
+    &:hover {
+      box-shadow: $card-shadow-hover;
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 1);
+    }
+  }
+}
+
+
+
+// Section complète (col-12)
+.col-12 {
+  app-title {
+    display: block;
+    margin-bottom: 2rem;
+    
+    // Titre avec effet moderne
+    h2, h3, h4 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: $text-primary;
+      text-align: center;
+      position: relative;
+      margin-bottom: 2rem;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 60px;
+        background: $background-primary;
+        border-radius: 50%;
+        opacity: 0.1;
+        z-index: -1;
+      }
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 3px;
+        background: $background-primary;
+        border-radius: 2px;
+      }
+    }
+  }
+  
+  // Boîte d'information crypto modernisée
+  .bg-light {
+    background: rgba(255, 255, 255, 0.95) !important;
+    padding: 2.5rem !important;
+    border-radius: $border-radius !important;
+    box-shadow: $card-shadow !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 18px !important;
+    line-height: 1.8 !important;
+    color: $text-primary;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    
+    &:hover {
+      box-shadow: $card-shadow-hover !important;
+      transform: translateY(-2px);
+    }
+    
+    // Effet de gradient subtle en arrière-plan
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: $background-primary;
+    }
+    
+    // Décoration latérale
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: $background-success;
+    }
+    
+    strong {
+      color: $primary-color;
+      font-weight: 700;
+    }
+    
+    em {
+      color: $success-color;
+      font-style: italic;
+      font-weight: 600;
+    }
+  }
+  
+  // Centrage pour les coins
+  &.d-flex.justify-content-center {
+  app-coins {
+    display: block;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: $border-radius;
+    padding: 3rem;
+    box-shadow: $card-shadow;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.4s ease;
+    max-width: 100%;
+    width: 100%;
+
+    &:hover {
+      box-shadow: $card-shadow-hover;
+      transform: translateY(-5px) scale(1.02);
+    }
+  }
+}
+
+  
+  // Section dividendes
+  app-dividendes {
+    display: block;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: $border-radius;
+    padding: 2rem;
+    box-shadow: $card-shadow;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.4s ease;
+    
+    &:hover {
+      box-shadow: $card-shadow-hover;
+      transform: translateY(-5px);
+    }
+  }
+}
+
+// Animations globales
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+// Application des animations
+.text-center.mb-5 {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.row {
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .container-fluid {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .text-center.mb-5 {
+    padding: 2rem 1rem;
+    
+    h2 {
+      font-size: 2rem;
+    }
+    
+    .text-muted {
+      font-size: 1.1rem;
+    }
+  }
+  
+  .d-flex.justify-content-center.gap-3 {
+    flex-direction: column;
+    align-items: center;
+    
+    .btn {
+      width: 100%;
+      max-width: 300px;
+      margin-bottom: 1rem;
+    }
+  }
+  
+  .bg-light {
+    padding: 1.5rem !important;
+    font-size: 16px !important;
+  }
+  
+  app-title {
+    h2, h3, h4 {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .col-lg-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+// Effets de hover améliorés pour tous les composants
+app-bulk-quotes,
+app-coins,
+app-dividendes {
+  cursor: pointer;
+  
+  &:hover {
+    animation: pulse 2s infinite;
+  }
+}
+
+// Amélioration de l'accessibilité
+.btn:focus {
+  outline: 2px solid $primary-color;
+  outline-offset: 2px;
+}
+
+// Styles pour les états de chargement (optionnel)
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid $primary-color;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
